@@ -21,9 +21,7 @@ export async function searchTracks(name: string): Promise<Track[]> {
             'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
         },
     })
-    const json = await res.json()
-    console.log(json);
-    
+    const json = await res.json()    
     return json["data"]
 }
 

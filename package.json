@@ -10,26 +10,28 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vsmp.list"
+		"onCommand:vsmp.searchMedia"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "vsmp.list",
-				"title": "list media",
-				"category": "Media player"
+				"command": "vsmp.searchMedia",
+				"title": "search media",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
 			},
 			{
 				"command": "vsmp.play",
 				"title": "play media",
-				"category": "Media player"
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
 			}
 		],
 		"views": {
 			"vsmp": [
 				{
-					"id": "vsmp.listmedia",
+					"id": "vsmp.mediaList",
 					"name": "Media player"
 				}
 			]
