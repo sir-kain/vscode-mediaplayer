@@ -1,27 +1,35 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as ressources from "./data/ressources";
+import { Track } from './data/models/Track';
+import * as mpvAPI from "node-mpv";
+const mpv = new mpvAPI();
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-		console.log('Congratulations, your extension "vscode-mediaplayer" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
+	vscode.commands.registerCommand('vsmp.list', async () => {
+		const mediaList = await ressources.searchTracks("eminem");
+		vscode.window.showQuickPick(mediaList.map(media => media.title));
 	});
-
-	context.subscriptions.push(disposable);
+	vscode.window.registerTreeDataProvider("vsmp.listmedia", {
+		getChildren(elem) {
+			return ressources.searchTracks("eminem");
+		},
+		getTreeItem(element: Track) {
+			return {
+				label: element.title,
+				command: {
+					command: "vsmp.play",
+					title: 'play',
+					arguments: [
+						vscode.Uri.parse(element.preview)
+					]
+				}
+			};
+		}
+	});
+	vscode.commands.registerCommand('vsmp.play', async (track) => {
+		return mpv.load('https://cdns-preview-5.dzcdn.net' + track.path);
+	});
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
