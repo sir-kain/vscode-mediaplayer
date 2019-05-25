@@ -1,18 +1,17 @@
 import fetch from 'node-fetch';
-import { Category } from "../data/models/Category";
 import { Track } from './models/Track';
 
-export async function fetchCategories(): Promise<Category[]> {
-    const res = await fetch("https://prod.ca-tests.com/category");
-    const json = await res.json();
-    return json;
-}
+// export async function fetchCategories(): Promise<Category[]> {
+//     const res = await fetch("https://prod.ca-tests.com/category");
+//     const json = await res.json();
+//     return json;
+// }
 
-export async function fetchCategory(uri: string): Promise<Category> {
-    const res = await fetch(uri);
-    const json = await res.json();
-    return json;
-}
+// export async function fetchCategory(uri: string): Promise<Category> {
+//     const res = await fetch(uri);
+//     const json = await res.json();
+//     return json;
+// }
 
 export async function searchTracks(name: string): Promise<Track[]> {
     const res = await fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + encodeURIComponent(name), {

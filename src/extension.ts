@@ -27,7 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	vscode.commands.registerCommand('vsmp.play', async (track) => {
-		return mpv.load('https://cdns-preview-5.dzcdn.net' + track.path);
+		mpv.load('https://cdns-preview-5.dzcdn.net' + track.path);
+		mpv.volume(20)
 	});
 }
 
