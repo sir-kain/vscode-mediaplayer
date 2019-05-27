@@ -26,6 +26,24 @@
 				"title": "play media",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.pause",
+				"title": "pause media",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.resume",
+				"title": "resume media",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.stop",
+				"title": "stop media",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
 			}
 		],
 		"views": {
@@ -63,6 +81,7 @@
 	"dependencies": {
 		"@types/node-fetch": "^2.3.4",
 		"node-fetch": "^2.6.0",
-		"node-mpv": "^1.4.3"
+		"node-mpv": "https://github.com/00SteinsGate00/Node-MPV.git#Node-MPV-2",
+		"simple-youtube-api": "^5.1.1"
 	}
 }

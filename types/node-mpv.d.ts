@@ -5,81 +5,113 @@ export = node_mpv;
 declare class node_mpv {
     constructor(options?: any, mpv_args?: any);
 
-    addAudioTrack(file: any, flag: any, title: any, lang: any): void;
+    addAudioTrack(file: any, flag: any, title: any, lang: any): any;
 
     addListener(type: any, listener: any): any;
 
-    addProperty(property: any, value: any): void;
+    addProperty(property: any, value: any): any;
 
-    addSubtitles(file: any, flag: any, title: any, lang: any): void;
+    addSubtitles(file: any, flag: any, title: any, lang: any): any;
 
-    adjustAudioTiming(seconds: any): void;
+    adjustAudioTiming(seconds: any): any;
 
-    adjustSubtitleTiming(seconds: any): void;
+    adjustSubtitleTiming(seconds: any): any;
 
-    adjustVolume(value: any): void;
+    adjustVolume(value: any): any;
 
-    append(file: any, mode: any, options: any): void;
+    append(file: any, mode: any, options: any): any;
 
-    brightness(value: any): void;
+    brightness(value: any): any;
 
-    clearPlaylist(): void;
+    clearPlaylist(): any;
 
-    command(command: any, args: any): void;
+    closeHandler(error_code: any): void;
 
-    commandJSON(command: any): void;
+    command(command: any, args: any): any;
 
-    contrast(value: any): void;
+    contrast(value: any): any;
 
-    cycleAudioTracks(): void;
+    cycleAudioTracks(): any;
 
-    cycleProperty(property: any): void;
+    cycleProperty(property: any): any;
 
-    cycleSubtitles(): void;
-
-    displayASS(ass: any, duration: any, position: any): void;
+    cycleSubtitles(): any;
 
     emit(type: any, args: any): any;
+
+    errorHandler(error: any): void;
 
     eventNames(): any;
 
     freeCommand(command: any): void;
 
-    fullscreen(): void;
+    fullscreen(): any;
 
-    gamma(value: any): void;
+    gamma(value: any): any;
+
+    getAlbum(): any;
+
+    getArtist(): any;
+
+    getDuration(): any;
+
+    getFilename(format: any): any;
 
     getMaxListeners(): any;
 
-    getProperty(property: any, id: any): any;
+    getMetadata(): any;
 
-    goToPosition(seconds: any): void;
+    getPercentPosition(): any;
 
-    hideSubtitles(): void;
+    getPlaylistPosition(): any;
 
-    hue(value: any): void;
+    getPlaylistPosition1(): any;
 
-    leaveFullscreen(): void;
+    getPlaylistSize(): any;
+
+    getProperty(property: any): any;
+
+    getTimePosition(): any;
+
+    getTimeRemaining(): any;
+
+    getTitle(): any;
+
+    getYear(): any;
+
+    goToPosition(seconds: any): any;
+
+    hideSubtitles(): any;
+
+    hue(value: any): any;
+
+    isMuted(): any;
+
+    isPaused(): any;
+
+    isRunning(): any;
+
+    isSeekable(): any;
+
+    leaveFullscreen(): any;
 
     listenerCount(type: any): any;
 
     listeners(type: any): any;
 
-    load(file: any, mode?: any, options?: any): void;
+    load(file: any, mode?: any, options?: any): any;
 
-    loadFile(file: any, mode: any): void;
+    loadPlaylist(playlist: any, mode?: any): any;
 
-    loadPlaylist(playlist: any, mode: any): void;
+    loop(times: any): any;
 
-    loadStream(url: any, mode: any): void;
+    messageHandler(message: any): void;
 
-    loop(times: any): void;
+    multiplyProperty(property: any, value: any): any;
 
-    multiplyProperty(property: any, value: any): void;
+    mute(): any;
 
-    mute(): void;
-
-    next(mode: any): void;
+    next(mode: any): any;
 
     observeProperty(property: any, id: any): void;
 
@@ -89,19 +121,19 @@ declare class node_mpv {
 
     once(type: any, listener: any): any;
 
-    pause(): void;
+    pause(): any;
 
-    play(): void;
+    play(): any;
 
-    playlistMove(index1: any, index2: any): void;
+    playlistMove(index1: any, index2: any): any;
 
-    playlistRemove(index: any): void;
+    playlistRemove(index: any): any;
 
     prependListener(type: any, listener: any): any;
 
     prependOnceListener(type: any, listener: any): any;
 
-    prev(mode: any): void;
+    prev(mode: any): any;
 
     quit(): void;
 
@@ -109,707 +141,64 @@ declare class node_mpv {
 
     removeAllListeners(type: any, ...args: any[]): any;
 
-    removeAudioTrack(id: any): void;
+    removeAudioTrack(id: any): any;
 
     removeListener(type: any, listener: any): any;
 
-    removeSubtitles(id: any): void;
+    removeSubtitles(id: any): any;
 
-    resume(): void;
+    resume(): any;
 
-    rotateVideo(degrees: any): void;
+    rotateVideo(degrees: any): any;
 
-    saturation(value: any): void;
+    saturation(value: any): any;
 
-    screenshot(file: any, option: any): void;
+    screenshot(file: any, option: any): any;
 
-    seek(seconds: any): void;
+    seek(seconds: any): any;
 
-    selectAudioTrack(id: any): void;
+    selectAudioTrack(id: any): any;
 
-    selectSubtitle(id: any): void;
-
-    selectSubtitles(id: any): void;
+    selectSubtitle(id: any): any;
 
     setMaxListeners(n: any): any;
 
     setMultipleProperties(properties: any): void;
 
-    setProperty(property: any, value: any): void;
+    setProperty(property: any, value: any): any;
 
-    showSubtitles(): void;
+    showSubtitles(): any;
 
-    shuffle(): void;
+    shuffle(): any;
 
-    speed(factor: any): void;
+    speed(factor: any): any;
 
-    stop(): void;
+    start(): any;
 
-    subtitleScale(scale: any): void;
+    stop(): any;
 
-    subtitleSeek(lines: any): void;
+    subtitleScale(scale: any): any;
 
-    toggleFullscreen(): void;
+    subtitleSeek(lines: any): any;
 
-    toggleMute(): void;
+    toggleFullscreen(): any;
 
-    togglePause(): void;
+    toggleMute(): any;
 
-    toggleSubtitleVisibility(): void;
+    togglePause(): any;
 
-    unmute(): void;
+    toggleSubtitleVisibility(): any;
+
+    unmute(): any;
 
     unobserveProperty(id: any): void;
 
-    volume(value: any): void;
+    volume(value: any): any;
 
-    zoomVideo(factor: any): void;
+    zoomVideo(factor: any): any;
 
 }
 
 declare namespace node_mpv {
-    namespace prototype {
-        function addAudioTrack(file: any, flag: any, title: any, lang: any): void;
-
-        function addListener(type: any, listener: any): any;
-
-        function addProperty(property: any, value: any): void;
-
-        function addSubtitles(file: any, flag: any, title: any, lang: any): void;
-
-        function adjustAudioTiming(seconds: any): void;
-
-        function adjustSubtitleTiming(seconds: any): void;
-
-        function adjustVolume(value: any): void;
-
-        function append(file: any, mode: any, options: any): void;
-
-        function brightness(value: any): void;
-
-        function clearPlaylist(): void;
-
-        function command(command: any, args: any): void;
-
-        function commandJSON(command: any): void;
-
-        function contrast(value: any): void;
-
-        function cycleAudioTracks(): void;
-
-        function cycleProperty(property: any): void;
-
-        function cycleSubtitles(): void;
-
-        function displayASS(ass: any, duration: any, position: any): void;
-
-        function emit(type: any, args: any): any;
-
-        function eventNames(): any;
-
-        function freeCommand(command: any): void;
-
-        function fullscreen(): void;
-
-        function gamma(value: any): void;
-
-        function getMaxListeners(): any;
-
-        function getProperty(property: any, id: any): any;
-
-        function goToPosition(seconds: any): void;
-
-        function hideSubtitles(): void;
-
-        function hue(value: any): void;
-
-        function leaveFullscreen(): void;
-
-        function listenerCount(type: any): any;
-
-        function listeners(type: any): any;
-
-        function load(file: any, mode: any, options: any): void;
-
-        function loadFile(file: any, mode: any): void;
-
-        function loadPlaylist(playlist: any, mode: any): void;
-
-        function loadStream(url: any, mode: any): void;
-
-        function loop(times: any): void;
-
-        function multiplyProperty(property: any, value: any): void;
-
-        function mute(): void;
-
-        function next(mode: any): void;
-
-        function observeProperty(property: any, id: any): void;
-
-        function off(type: any, listener: any): any;
-
-        function on(type: any, listener: any): any;
-
-        function once(type: any, listener: any): any;
-
-        function pause(): void;
-
-        function play(): void;
-
-        function playlistMove(index1: any, index2: any): void;
-
-        function playlistRemove(index: any): void;
-
-        function prependListener(type: any, listener: any): any;
-
-        function prependOnceListener(type: any, listener: any): any;
-
-        function prev(mode: any): void;
-
-        function quit(): void;
-
-        function rawListeners(type: any): any;
-
-        function removeAllListeners(type: any, ...args: any[]): any;
-
-        function removeAudioTrack(id: any): void;
-
-        function removeListener(type: any, listener: any): any;
-
-        function removeSubtitles(id: any): void;
-
-        function resume(): void;
-
-        function rotateVideo(degrees: any): void;
-
-        function saturation(value: any): void;
-
-        function screenshot(file: any, option: any): void;
-
-        function seek(seconds: any): void;
-
-        function selectAudioTrack(id: any): void;
-
-        function selectSubtitle(id: any): void;
-
-        function selectSubtitles(id: any): void;
-
-        function setMaxListeners(n: any): any;
-
-        function setMultipleProperties(properties: any): void;
-
-        function setProperty(property: any, value: any): void;
-
-        function showSubtitles(): void;
-
-        function shuffle(): void;
-
-        function speed(factor: any): void;
-
-        function stop(): void;
-
-        function subtitleScale(scale: any): void;
-
-        function subtitleSeek(lines: any): void;
-
-        function toggleFullscreen(): void;
-
-        function toggleMute(): void;
-
-        function togglePause(): void;
-
-        function toggleSubtitleVisibility(): void;
-
-        function unmute(): void;
-
-        function unobserveProperty(id: any): void;
-
-        function volume(value: any): void;
-
-        function zoomVideo(factor: any): void;
-
-        namespace addAudioTrack {
-            const prototype: {
-            };
-
-        }
-
-        namespace addListener {
-            const prototype: {
-            };
-
-        }
-
-        namespace addProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace addSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace adjustAudioTiming {
-            const prototype: {
-            };
-
-        }
-
-        namespace adjustSubtitleTiming {
-            const prototype: {
-            };
-
-        }
-
-        namespace adjustVolume {
-            const prototype: {
-            };
-
-        }
-
-        namespace append {
-            const prototype: {
-            };
-
-        }
-
-        namespace brightness {
-            const prototype: {
-            };
-
-        }
-
-        namespace clearPlaylist {
-            const prototype: {
-            };
-
-        }
-
-        namespace command {
-            const prototype: {
-            };
-
-        }
-
-        namespace commandJSON {
-            const prototype: {
-            };
-
-        }
-
-        namespace contrast {
-            const prototype: {
-            };
-
-        }
-
-        namespace cycleAudioTracks {
-            const prototype: {
-            };
-
-        }
-
-        namespace cycleProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace cycleSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace displayASS {
-            const prototype: {
-            };
-
-        }
-
-        namespace emit {
-            const prototype: {
-            };
-
-        }
-
-        namespace eventNames {
-            const prototype: {
-            };
-
-        }
-
-        namespace freeCommand {
-            const prototype: {
-            };
-
-        }
-
-        namespace fullscreen {
-            const prototype: {
-            };
-
-        }
-
-        namespace gamma {
-            const prototype: {
-            };
-
-        }
-
-        namespace getMaxListeners {
-            const prototype: {
-            };
-
-        }
-
-        namespace getProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace goToPosition {
-            const prototype: {
-            };
-
-        }
-
-        namespace hideSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace hue {
-            const prototype: {
-            };
-
-        }
-
-        namespace leaveFullscreen {
-            const prototype: {
-            };
-
-        }
-
-        namespace listenerCount {
-            const prototype: {
-            };
-
-        }
-
-        namespace listeners {
-            const prototype: {
-            };
-
-        }
-
-        namespace load {
-            const prototype: {
-            };
-
-        }
-
-        namespace loadFile {
-            const prototype: {
-            };
-
-        }
-
-        namespace loadPlaylist {
-            const prototype: {
-            };
-
-        }
-
-        namespace loadStream {
-            const prototype: {
-            };
-
-        }
-
-        namespace loop {
-            const prototype: {
-            };
-
-        }
-
-        namespace multiplyProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace mute {
-            const prototype: {
-            };
-
-        }
-
-        namespace next {
-            const prototype: {
-            };
-
-        }
-
-        namespace observeProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace off {
-            const prototype: {
-            };
-
-        }
-
-        namespace on {
-            const prototype: {
-            };
-
-        }
-
-        namespace once {
-            const prototype: {
-            };
-
-        }
-
-        namespace pause {
-            const prototype: {
-            };
-
-        }
-
-        namespace play {
-            const prototype: {
-            };
-
-        }
-
-        namespace playlistMove {
-            const prototype: {
-            };
-
-        }
-
-        namespace playlistRemove {
-            const prototype: {
-            };
-
-        }
-
-        namespace prependListener {
-            const prototype: {
-            };
-
-        }
-
-        namespace prependOnceListener {
-            const prototype: {
-            };
-
-        }
-
-        namespace prev {
-            const prototype: {
-            };
-
-        }
-
-        namespace quit {
-            const prototype: {
-            };
-
-        }
-
-        namespace rawListeners {
-            const prototype: {
-            };
-
-        }
-
-        namespace removeAllListeners {
-            const prototype: {
-            };
-
-        }
-
-        namespace removeAudioTrack {
-            const prototype: {
-            };
-
-        }
-
-        namespace removeListener {
-            const prototype: {
-            };
-
-        }
-
-        namespace removeSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace resume {
-            const prototype: {
-            };
-
-        }
-
-        namespace rotateVideo {
-            const prototype: {
-            };
-
-        }
-
-        namespace saturation {
-            const prototype: {
-            };
-
-        }
-
-        namespace screenshot {
-            const prototype: {
-            };
-
-        }
-
-        namespace seek {
-            const prototype: {
-            };
-
-        }
-
-        namespace selectAudioTrack {
-            const prototype: {
-            };
-
-        }
-
-        namespace selectSubtitle {
-            const prototype: {
-            };
-
-        }
-
-        namespace selectSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace setMaxListeners {
-            const prototype: {
-            };
-
-        }
-
-        namespace setMultipleProperties {
-            const prototype: {
-            };
-
-        }
-
-        namespace setProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace showSubtitles {
-            const prototype: {
-            };
-
-        }
-
-        namespace shuffle {
-            const prototype: {
-            };
-
-        }
-
-        namespace speed {
-            const prototype: {
-            };
-
-        }
-
-        namespace stop {
-            const prototype: {
-            };
-
-        }
-
-        namespace subtitleScale {
-            const prototype: {
-            };
-
-        }
-
-        namespace subtitleSeek {
-            const prototype: {
-            };
-
-        }
-
-        namespace toggleFullscreen {
-            const prototype: {
-            };
-
-        }
-
-        namespace toggleMute {
-            const prototype: {
-            };
-
-        }
-
-        namespace togglePause {
-            const prototype: {
-            };
-
-        }
-
-        namespace toggleSubtitleVisibility {
-            const prototype: {
-            };
-
-        }
-
-        namespace unmute {
-            const prototype: {
-            };
-
-        }
-
-        namespace unobserveProperty {
-            const prototype: {
-            };
-
-        }
-
-        namespace volume {
-            const prototype: {
-            };
-
-        }
-
-        namespace zoomVideo {
-            const prototype: {
-            };
-
-        }
-
-    }
-
 }
 

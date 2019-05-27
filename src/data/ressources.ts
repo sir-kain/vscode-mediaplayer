@@ -1,20 +1,11 @@
 import fetch, { Response } from 'node-fetch';
 import { Track } from './models/Track';
-
-// export async function fetchCategories(): Promise<Category[]> {
-//     const res = await fetch("https://prod.ca-tests.com/category");
-//     const json = await res.json();
-//     return json;
-// }
-
-// export async function fetchCategory(uri: string): Promise<Category> {
-//     const res = await fetch(uri);
-//     const json = await res.json();
-//     return json;
-// }
+import * as YouTube from "simple-youtube-api";
+const youtube = new YouTube('AIzaSyC3URt50QfVuOAxJvls1CcqXs-rGLbHf88');
 
 export async function searchTracks(provider: string, name: string): Promise<Track[]> {
     let res = new Response();
+    let tracks: Array<any> = [];
     switch (provider) {
         case "Deezer":
             res = await fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + encodeURIComponent(name), {
@@ -24,17 +15,26 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                     'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
                 }
             });
+            let tracksJson = await res.json();
+            tracks = tracksJson["data"].map((data: any) => {
+                return {
+                    title: data.title,
+                    icon: data.album["cover_small"],
+                    url: data.preview
+                }
+
+            });
+            break;
+        case "YouTube":
+            tracks = await youtube.searchVideos(name, 20);
+            tracks = tracks.map((data: any) => {
+                return {
+                    title: data.title,
+                    icon: data.raw.snippet.thumbnails.default.url,
+                    url: `https://www.youtube.com/watch?v=${data.id}`
+                };
+            });
             break;
     }
-    const tracks = await res.json()
-    return tracks["data"]
+    return tracks;
 }
-
-// export async function fetchCategoryImageURL(name: string): Promise<string | undefined> {
-//     const res = await fetch("https://en.wikipedia.org/w/index.php?action=render&title=" + encodeURIComponent(name))
-//     const html = await res.text()
-//     const urls = /upload.wikimedia.org[^"]+/.exec(html)
-//     const picture = urls && urls.find(url => !url.endsWith(".svg.png"))
-//     if (picture)
-//         return "https://" + picture
-// }
