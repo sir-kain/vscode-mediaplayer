@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vsmp.searchMedia"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -51,6 +51,14 @@
 				{
 					"id": "vsmp.mediaList",
 					"name": "Media player"
+				},
+				{
+					"id": "vsmp.play",
+					"name": "Playlist"
+				},
+				{
+					"id": "test",
+					"name": "looooll"
 				}
 			]
 		},

@@ -10,8 +10,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('vsmp.searchMedia', async () => {
 		vscode.window.showQuickPick(["Deezer", "YouTube"]).then((provider: any) => {
 			vscode.window.showInputBox().then((keyword: any) => {
-				if (keyword === "") {
-					vscode.window.showInformationMessage("Please enter keyword");
+				if (!keyword) {
+					vscode.window.showInformationMessage("Please enter keyword!");
 					return;
 				}
 				vscode.window.registerTreeDataProvider("vsmp.mediaList", {
@@ -31,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 					},
 					getTreeItem(track: Track) {
 						return {
+							tooltip: `${provider}: ${track.title}`,
 							label: track.title,
 							iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
 							command: {
@@ -43,18 +44,19 @@ export function activate(context: vscode.ExtensionContext) {
 						};
 					}
 				});
-			})
+			});
 		});
 	});
 	vscode.commands.registerCommand('vsmp.play', async (url: string) => {
 		try {
+			let mpvIsRunning = await mpv.isRunning();
+			if (mpvIsRunning) {
+				await mpv.quit();
+			}
 			await mpv.start();
 			await mpv.load(url);
 		}
 		catch (error) {
-			// Maybe the mpv player could not be started
-			// Maybe the video file does not exist or couldn't be loaded
-			// Maybe someProperty is not a valid property
 			console.log("err ", error);
 		}
 	});
