@@ -17,31 +17,43 @@
 		"commands": [
 			{
 				"command": "vsmp.searchMedia",
-				"title": "search media",
+				"title": "Search",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
 			},
 			{
 				"command": "vsmp.play",
-				"title": "play media",
+				"title": "Play",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
 			},
 			{
 				"command": "vsmp.pause",
-				"title": "pause media",
+				"title": "Pause",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
 			},
 			{
 				"command": "vsmp.resume",
-				"title": "resume media",
+				"title": "Resume",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.next",
+				"title": "Next",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.prev",
+				"title": "Previous",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
 			},
 			{
 				"command": "vsmp.stop",
-				"title": "stop media",
+				"title": "Stop",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
 			}
@@ -50,15 +62,11 @@
 			"vsmp": [
 				{
 					"id": "vsmp.mediaList",
-					"name": "Media player"
+					"name": "Search"
 				},
 				{
 					"id": "vsmp.play",
 					"name": "Playlist"
-				},
-				{
-					"id": "test",
-					"name": "looooll"
 				}
 			]
 		},
@@ -66,8 +74,16 @@
 			"activitybar": [
 				{
 					"id": "vsmp",
-					"icon": "src/assets/music-player.svg",
+					"icon": "src/assets/crotchet.svg",
 					"title": "Media player"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "vsmp.searchMedia",
+					"group": "navigation"
 				}
 			]
 		}
