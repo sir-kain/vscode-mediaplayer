@@ -12,7 +12,7 @@ let myStatusBarItemNext = vscode.window.createStatusBarItem(vscode.StatusBarAlig
 
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('vsmp.searchMedia', async () => {
-		vscode.window.showQuickPick(["Deezer", "Spotify", "YouTube"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
+		vscode.window.showQuickPick(["Deezer", "YouTube"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
 			if (!provider) { return vscode.window.showWarningMessage(`A provider is required ...`); }
 			vscode.window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return vscode.window.showInformationMessage("Please enter keyword!"); }
