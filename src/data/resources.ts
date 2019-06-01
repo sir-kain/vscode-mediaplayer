@@ -21,7 +21,7 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                     title: data.title,
                     icon: data.album["cover_small"],
                     url: data.preview
-                }
+                };
 
             });
             break;

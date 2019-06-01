@@ -22,6 +22,12 @@
 				"icon": "src/assets/music-player.svg"
 			},
 			{
+				"command": "vsmp.openFolder",
+				"title": "Import local media",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
 				"command": "vsmp.play",
 				"title": "Play",
 				"category": "Media player",
@@ -67,6 +73,10 @@
 				{
 					"id": "vsmp.play",
 					"name": "Playlist"
+				},
+				{
+					"id": "vsmp.openFolder",
+					"name": "Local"
 				}
 			]
 		},
@@ -83,6 +93,10 @@
 			"view/title": [
 				{
 					"command": "vsmp.searchMedia",
+					"group": "navigation"
+				},
+				{
+					"command": "vsmp.openFolder",
 					"group": "navigation"
 				}
 			]

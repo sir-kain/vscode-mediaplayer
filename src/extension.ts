@@ -1,30 +1,21 @@
 import * as vscode from 'vscode';
-import * as ressources from "./data/ressources";
+import * as ressources from "./data/resources";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
 import * as mpvAPI from "node-mpv";
-const homedir = require("os").homedir(),
-	path = require("path"),
-	searchFile = path.join(homedir, "search.vscmp"),
-	playlistFile = path.join(homedir, "playlist.vscmp"),
-	mpv = new mpvAPI({
-		"audio_only": true,
-	});
+import * as config from "./data/config";
+const mpv = new mpvAPI({ "audio_only": true });
 
-
-
-let myStatusBarItemPrev: vscode.StatusBarItem;
-let myStatusBarItemTogglePlay: vscode.StatusBarItem;
-let myStatusBarItemNext: vscode.StatusBarItem;
+let myStatusBarItemPrev = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+let myStatusBarItemTogglePlay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+let myStatusBarItemNext = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('vsmp.searchMedia', async () => {
-		vscode.window.showQuickPick(["Deezer", "YouTube"]).then((provider: any) => {
-			vscode.window.showInputBox().then((keyword: any) => {
-				if (!keyword) {
-					vscode.window.showInformationMessage("Please enter keyword!");
-					return;
-				}
+		vscode.window.showQuickPick(["Deezer", "Spotify", "YouTube"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
+			if (!provider) { return vscode.window.showWarningMessage(`A provider is required ...`); }
+			vscode.window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
+				if (!keyword) { return vscode.window.showInformationMessage("Please enter keyword!"); }
 				vscode.window.registerTreeDataProvider("vsmp.mediaList", {
 					async getChildren() {
 						const mediaList = await ressources.searchTracks(provider, keyword);
@@ -33,26 +24,38 @@ export function activate(context: vscode.ExtensionContext) {
 							return;
 						}
 						// populate the search file, will be used as the playlist for search
-						fileHandler.createPlaylistFile(mediaList, searchFile);
+						let contentSearchFile: string = '';
+						mediaList.map((track: Track) => {
+							contentSearchFile = contentSearchFile + track.url + "\r\n";
+						});
+						fileHandler.createPlaylistFile(contentSearchFile);
+						myStatusBarItemPrev.text = '';
+						myStatusBarItemPrev.hide();
+						myStatusBarItemNext.text = '';
+						myStatusBarItemNext.hide();
+						myStatusBarItemTogglePlay.text = '';
+						myStatusBarItemTogglePlay.hide();
 						try {
 							let mpvIsRunning = await mpv.isRunning();
 							if (mpvIsRunning) {
 								await mpv.quit();
 							}
 							await mpv.start();
-							await mpv.loadPlaylist(searchFile);
-							myStatusBarItemPrev = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-							myStatusBarItemPrev.text = `$(chevron-left)`;
+							await mpv.loadPlaylist(config.searchFile);
+
+							myStatusBarItemPrev.text = `$(triangle-left)`;
 							myStatusBarItemPrev.tooltip = "Prev";
+							myStatusBarItemPrev.command = "vsmp.prev";
 							myStatusBarItemPrev.show();
-							myStatusBarItemTogglePlay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+
 							myStatusBarItemTogglePlay.text = `$(dash) 00:00`;
-							myStatusBarItemTogglePlay.tooltip = "Play";
+							myStatusBarItemTogglePlay.tooltip = "Pause";
 							myStatusBarItemTogglePlay.command = "vsmp.pause";
 							myStatusBarItemTogglePlay.show();
-							myStatusBarItemNext = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-							myStatusBarItemNext.text = `$(chevron-right)`;
+
+							myStatusBarItemNext.text = `$(triangle-right)`;
 							myStatusBarItemNext.tooltip = "Next";
+							myStatusBarItemNext.command = "vsmp.next";
 							myStatusBarItemNext.show();
 						}
 						catch (error) {
@@ -79,6 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	});
 }
+
 vscode.commands.registerCommand('vsmp.play', async (url: string) => {
 	try {
 		let mpvIsRunning = await mpv.isRunning();
@@ -87,9 +91,6 @@ vscode.commands.registerCommand('vsmp.play', async (url: string) => {
 		}
 		await mpv.start();
 		await mpv.load(url);
-		// await mpv.playlistMove(await mpv.getPlaylistPosition(), 2);
-		// console.log('playlist size ', await mpv.getPlaylistSize());
-		// console.log('playlist pos ', await mpv.getPlaylistPosition());
 	}
 	catch (error) {
 		console.log("err ", error);
@@ -105,6 +106,7 @@ vscode.commands.registerCommand('vsmp.pause', async () => {
 });
 vscode.commands.registerCommand('vsmp.resume', async () => {
 	try {
+		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
 		await mpv.resume();
 	}
 	catch (error) {
@@ -113,7 +115,8 @@ vscode.commands.registerCommand('vsmp.resume', async () => {
 });
 vscode.commands.registerCommand('vsmp.next', async () => {
 	try {
-		await mpv.next("force");
+		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
+		await mpv.next("weak");
 	}
 	catch (error) {
 		console.log("next ", error);
@@ -121,23 +124,71 @@ vscode.commands.registerCommand('vsmp.next', async () => {
 });
 vscode.commands.registerCommand('vsmp.prev', async () => {
 	try {
-		await mpv.prev("force");
+		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
+		await mpv.prev("weak");
 	}
 	catch (error) {
 		console.log("prev ", error);
 	}
 });
-
-mpv.on('timeposition', function (time: any) {
-	myStatusBarItemTogglePlay.text = `$(dash) ${time}`;
-	console.log('time ! ', time);
+vscode.commands.registerCommand('vsmp.openFolder', async () => {
+	const openDialogOprions = {
+		canSelectMany: true,
+		openLabel: 'Add to local playlist',
+		filters: {
+			'Media': ['mp3', 'mp4', 'avi', 'mkv', 'webm']
+		}
+	};
+	vscode.window.showOpenDialog(openDialogOprions).then((fileUri) => {
+		let contentLocalPlaylist: string = '';
+		if (fileUri) {
+			fileUri.map(url => {
+				contentLocalPlaylist = contentLocalPlaylist + url.fsPath + '\r\n';
+			});
+			// populate the local playlist file, will be used as the playlist for local media
+			fileHandler.createPlaylistFile(contentLocalPlaylist, "local");
+		}
+	});
 });
-mpv.on('paused', function (e: any) {
-	myStatusBarItemTogglePlay.text = "$(play) 00:00";
-	myStatusBarItemTogglePlay.tooltip = "Pause";
+
+mpv.on('timeposition', async (timePos: any) => {
+	myStatusBarItemTogglePlay.text = `$(dash) ${timePos}`;
+	myStatusBarItemTogglePlay.tooltip = await mpv.getTitle();
+	// do we need 'resumed' event ?
+	console.log("timePos... ", timePos);
+});
+mpv.on('paused', async (e: any) => {
+	const timePos = await mpv.getTimePosition();
+	myStatusBarItemTogglePlay.text = `$(play) ${timePos}`;
+	myStatusBarItemTogglePlay.tooltip = "Resume";
 	myStatusBarItemTogglePlay.command = "vsmp.resume";
-	console.log('time ! ', e);
+});
+mpv.on('resumed', async (e: any) => {
+	const timePos = await mpv.getTimePosition();
+	myStatusBarItemTogglePlay.text = `$(dash) ${timePos}`;
+	myStatusBarItemTogglePlay.tooltip = "Pause";
+	myStatusBarItemTogglePlay.command = "vsmp.pause";
 });
 
+
+vscode.window.registerTreeDataProvider("vsmp.openFolder", {
+	async getChildren() {
+		return ['ok', 'ko'];
+	},
+	getTreeItem(url: string) {
+		return {
+			// tooltip: `: ${track.title}`,
+			label: url,
+			// iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
+			command: {
+				command: "vsmp.play",
+				title: 'play',
+				arguments: [
+					url
+				]
+			}
+		};
+	}
+});
 // this method is called when your extension is deactivated
 export function deactivate() { }

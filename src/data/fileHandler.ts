@@ -1,16 +1,18 @@
 import { promisify } from "util";
-import { Track } from "./models/Track";
+import * as config from "../data/config";
 const fs = require("fs"),
-  writeFileAsync = promisify(fs.writeFile);
+  rl = require("readline"),
+  writeFileAsync = promisify(fs.writeFile),
+  appendFileAsync = promisify(fs.appendFile);
 
-export async function createPlaylistFile(tracks: Array<Track>, filePath: string, type?: string) {
-  let contentSearchFile: string = '';
-  tracks.map((track: Track) => {
-    contentSearchFile = contentSearchFile + track.url + "\r\n";
-  });
+export async function createPlaylistFile(content: string, type?: string) {
   try {
-    await writeFileAsync(filePath, contentSearchFile);
+    if (type === 'local') {
+      await appendFileAsync(config.localFile, content);
+    } else {
+      await writeFileAsync(config.searchFile, content);
+    }
   } catch (error) {
-    console.log('error while creating file for search playlist ', error);
+    console.log('error while creating file for search playlist ', type, error);
   }
 }
