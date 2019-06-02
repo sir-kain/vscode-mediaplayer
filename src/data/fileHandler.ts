@@ -26,21 +26,25 @@ export async function fileExist(file: string): Promise<Boolean> {
     await statAsync(file);
   } catch (error) {
     exists = false;
-    console.error(`Error while checking ${file} exists: ${error}`);
   }
   return exists;
 }
 
 export async function readPlaylistLineByLine(callback: (localPlaylistTracks: Array<string>) => void) {
   let localPlaylistTracks: Array<string> = [];
-  let lineReader = rl.createInterface({
-    input: fs.createReadStream(config.localFile)
-  });
+  let fileExists = await fileExist(config.localFile);
+  if (fileExists) {
+    let lineReader = rl.createInterface({
+      input: fs.createReadStream(config.localFile)
+    });
 
-  lineReader.on('line', (line: string) => {
-    localPlaylistTracks.push(line);
-  });
-  lineReader.on('close', () => {
+    lineReader.on('line', (line: string) => {
+      localPlaylistTracks.push(line);
+    });
+    lineReader.on('close', () => {
+      callback(localPlaylistTracks);
+    });
+  } else {
     callback(localPlaylistTracks);
-  });
+  }
 }

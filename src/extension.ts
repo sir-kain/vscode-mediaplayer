@@ -131,6 +131,9 @@ vscode.commands.registerCommand('vsmp.prev', async () => {
 		console.log("prev ", error);
 	}
 });
+vscode.commands.registerCommand('vsmp.refreshLocalList', async () => {
+	refreshLocalList();
+});
 vscode.commands.registerCommand('vsmp.openFolder', async () => {
 	const openDialogOprions = {
 		canSelectMany: true,
@@ -148,9 +151,7 @@ vscode.commands.registerCommand('vsmp.openFolder', async () => {
 			// populate the local playlist file, will be used as the playlist for local media
 			fileHandler.createPlaylistFile(contentLocalPlaylist, "local");
 			// read the file and show it in the tree view
-			fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
-				updateLocalTreeView(localPlaylistTracks);
-			});
+			refreshLocalList();
 		}
 	});
 });
@@ -178,12 +179,10 @@ mpv.on('resumed', async (e: any) => {
 let fileExist = fileHandler.fileExist(config.localFile);
 if (fileExist) {
 	// read the file and show it in the tree view
-	fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
-		updateLocalTreeView(localPlaylistTracks);
-	});
+	refreshLocalList();
 } else {
 	// show button "upload local tracks" in tree view
-
+	
 }
 
 function updateLocalTreeView(localPlaylistTracks: Array<string>) {
@@ -205,6 +204,15 @@ function updateLocalTreeView(localPlaylistTracks: Array<string>) {
 					]
 				}
 			};
+		}
+	});
+}
+function refreshLocalList() {
+	fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
+		if (localPlaylistTracks && localPlaylistTracks.length > 0) {
+			updateLocalTreeView(localPlaylistTracks);
+		} else {
+			vscode.window.showInformationMessage("You have no uploaded tracks");
 		}
 	});
 }
