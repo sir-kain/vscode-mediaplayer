@@ -147,6 +147,10 @@ vscode.commands.registerCommand('vsmp.openFolder', async () => {
 			});
 			// populate the local playlist file, will be used as the playlist for local media
 			fileHandler.createPlaylistFile(contentLocalPlaylist, "local");
+			// read the file and show it in the tree view
+			fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
+				updateLocalTreeView(localPlaylistTracks);
+			});
 		}
 	});
 });
@@ -175,31 +179,34 @@ let fileExist = fileHandler.fileExist(config.localFile);
 if (fileExist) {
 	// read the file and show it in the tree view
 	fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
-		vscode.window.registerTreeDataProvider("vsmp.openFolder", {
-			async getChildren() {
-				return localPlaylistTracks;
-			},
-			getTreeItem(url: string) {
-				let title = url.split("/").pop();
-				return {
-					// tooltip: `: ${track.title}`,
-					label: title,
-					// iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
-					command: {
-						command: "vsmp.play",
-						title: 'play',
-						arguments: [
-							url
-						]
-					}
-				};
-			}
-		});
+		updateLocalTreeView(localPlaylistTracks);
 	});
 } else {
 	// show button "upload local tracks" in tree view
 
 }
 
+function updateLocalTreeView(localPlaylistTracks: Array<string>) {
+	vscode.window.registerTreeDataProvider("vsmp.openFolder", {
+		async getChildren() {
+			return localPlaylistTracks;
+		},
+		getTreeItem(url: string) {
+			let title = url.split("/").pop();
+			return {
+				// tooltip: `: ${track.title}`,
+				label: title,
+				// iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
+				command: {
+					command: "vsmp.play",
+					title: 'play',
+					arguments: [
+						url
+					]
+				}
+			};
+		}
+	});
+}
 // this method is called when your extension is deactivated
 export function deactivate() { }

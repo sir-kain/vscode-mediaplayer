@@ -22,10 +22,21 @@
 				"icon": "src/assets/music-player.svg"
 			},
 			{
+				"command": "vsmp.refreshLocalList",
+				"title": "Refresh",
+				"icon": {
+					"dark": "src/assets/dark/refresh.svg",
+					"light": "src/assets/light/refresh.svg"
+				}
+			},
+			{
 				"command": "vsmp.openFolder",
 				"title": "Import local media",
 				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"icon": {
+					"dark": "src/assets/dark/folder.svg",
+					"light": "src/assets/light/folder.svg"
+				}
 			},
 			{
 				"command": "vsmp.play",
@@ -62,6 +73,19 @@
 				"title": "Stop",
 				"category": "Media player",
 				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.refreshSearchList",
+				"title": "Refresh",
+				"icon": {
+					"dark": "src/assets/dark/refresh.svg",
+					"light": "src/assets/light/refresh.svg"
+				}
+			},
+			{
+				"command": "vsmp.lp.deteleTrack",
+				"title": "Delete track",
+				"icon": "src/assets/delete.svg"
 			}
 		],
 		"views": {
@@ -93,11 +117,30 @@
 			"view/title": [
 				{
 					"command": "vsmp.searchMedia",
+					"when": "view == vsmp.mediaList",
 					"group": "navigation"
 				},
 				{
 					"command": "vsmp.openFolder",
+					"when": "view == vsmp.openFolder",
 					"group": "navigation"
+				},
+				{
+					"command": "vsmp.refreshSearchList",
+					"when": "view == vsmp.mediaList",
+					"group": "navigation"
+				},
+				{
+					"command": "vsmp.refreshLocalList",
+					"when": "view == vsmp.openFolder",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "vsmp.lp.deteleTrack",
+					"when": "view == vsmp.openFolder",
+					"group": "inline"
 				}
 			]
 		}
