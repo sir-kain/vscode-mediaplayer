@@ -24,11 +24,9 @@ export function activate(context: vscode.ExtensionContext) {
 							return;
 						}
 						// populate the search file, will be used as the playlist for search
-						let contentSearchFile: string = '';
-						mediaList.map((track: Track) => {
-							contentSearchFile = contentSearchFile + track.url + "\r\n";
-						});
-						fileHandler.createPlaylistFile(contentSearchFile);
+						let tracks: Array<any> = [];
+						mediaList.map((track: Track) => tracks.push(track.url));
+						fileHandler.createPlaylistFile(tracks, "", await refreshLocalList);
 						myStatusBarItemPrev.text = '';
 						myStatusBarItemPrev.hide();
 						myStatusBarItemNext.text = '';
@@ -59,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 							myStatusBarItemNext.show();
 						}
 						catch (error) {
-							console.log("err ", error);
+							console.error("err ", error);
 						}
 						return mediaList;
 					},
@@ -131,8 +129,13 @@ vscode.commands.registerCommand('vsmp.prev', async () => {
 		console.log("prev ", error);
 	}
 });
+vscode.commands.registerCommand('vsmp.lp.deteleTrack', async (itemToDelete) => {
+	// read file and delete item which match param
+	// await fileHandler.deleteFile(config.localFile);
+	await fileHandler.deleteTrackFile(itemToDelete, "local", await refreshLocalList);
+});
 vscode.commands.registerCommand('vsmp.refreshLocalList', async () => {
-	refreshLocalList();
+	await refreshLocalList();
 });
 vscode.commands.registerCommand('vsmp.openFolder', async () => {
 	const openDialogOprions = {
@@ -142,19 +145,19 @@ vscode.commands.registerCommand('vsmp.openFolder', async () => {
 			'Media': ['mp3', 'mp4', 'avi', 'mkv', 'webm']
 		}
 	};
-	vscode.window.showOpenDialog(openDialogOprions).then((fileUri) => {
-		let contentLocalPlaylist: string = '';
+	vscode.window.showOpenDialog(openDialogOprions).then(async (fileUri) => {
+		let tracks: Array<string> = [];
 		if (fileUri) {
 			fileUri.map(url => {
-				contentLocalPlaylist = contentLocalPlaylist + url.fsPath + '\r\n';
+				tracks = tracks.concat(url.fsPath)
 			});
-			// populate the local playlist file, will be used as the playlist for local media
-			fileHandler.createPlaylistFile(contentLocalPlaylist, "local");
-			// read the file and show it in the tree view
-			refreshLocalList();
+			// populate the local playlist file, will be used as the playlist for local media			
+			await fileHandler.createPlaylistFile(tracks, "local", await refreshLocalList);
+			// read the file and show it in the tree view			
 		}
 	});
 });
+
 
 mpv.on('timeposition', async (timePos: any) => {
 	myStatusBarItemTogglePlay.text = `$(dash) ${timePos}`;
@@ -182,10 +185,10 @@ if (fileExist) {
 	refreshLocalList();
 } else {
 	// show button "upload local tracks" in tree view
-	
+
 }
 
-function updateLocalTreeView(localPlaylistTracks: Array<string>) {
+async function updateLocalTreeView(localPlaylistTracks: Array<string>) {
 	vscode.window.registerTreeDataProvider("vsmp.openFolder", {
 		async getChildren() {
 			return localPlaylistTracks;
@@ -207,11 +210,10 @@ function updateLocalTreeView(localPlaylistTracks: Array<string>) {
 		}
 	});
 }
-function refreshLocalList() {
-	fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
-		if (localPlaylistTracks && localPlaylistTracks.length > 0) {
-			updateLocalTreeView(localPlaylistTracks);
-		} else {
+async function refreshLocalList() {
+	await fileHandler.readPlaylistLineByLine(async (localPlaylistTracks: Array<string>) => {
+		await updateLocalTreeView(localPlaylistTracks);
+		if (localPlaylistTracks.length === 0) {
 			vscode.window.showInformationMessage("You have no uploaded tracks");
 		}
 	});
