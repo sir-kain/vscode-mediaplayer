@@ -106,7 +106,7 @@ vscode.commands.registerCommand('vsmp.pause', async () => {
 });
 vscode.commands.registerCommand('vsmp.resume', async () => {
 	try {
-		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
+		myStatusBarItemTogglePlay.text = `Loading $(sync~spin)`;
 		await mpv.resume();
 	}
 	catch (error) {
@@ -115,7 +115,7 @@ vscode.commands.registerCommand('vsmp.resume', async () => {
 });
 vscode.commands.registerCommand('vsmp.next', async () => {
 	try {
-		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
+		myStatusBarItemTogglePlay.text = `Loading $(sync~spin)`;
 		await mpv.next("weak");
 	}
 	catch (error) {
@@ -124,7 +124,7 @@ vscode.commands.registerCommand('vsmp.next', async () => {
 });
 vscode.commands.registerCommand('vsmp.prev', async () => {
 	try {
-		myStatusBarItemTogglePlay.text = `Loading $(kebab-horizontal)`;
+		myStatusBarItemTogglePlay.text = `Loading $(sync~spin)`;
 		await mpv.prev("weak");
 	}
 	catch (error) {
@@ -155,7 +155,6 @@ mpv.on('timeposition', async (timePos: any) => {
 	myStatusBarItemTogglePlay.text = `$(dash) ${timePos}`;
 	myStatusBarItemTogglePlay.tooltip = await mpv.getTitle();
 	// do we need 'resumed' event ?
-	console.log("timePos... ", timePos);
 });
 mpv.on('paused', async (e: any) => {
 	const timePos = await mpv.getTimePosition();
@@ -171,24 +170,36 @@ mpv.on('resumed', async (e: any) => {
 });
 
 
-vscode.window.registerTreeDataProvider("vsmp.openFolder", {
-	async getChildren() {
-		return ['ok', 'ko'];
-	},
-	getTreeItem(url: string) {
-		return {
-			// tooltip: `: ${track.title}`,
-			label: url,
-			// iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
-			command: {
-				command: "vsmp.play",
-				title: 'play',
-				arguments: [
-					url
-				]
+// check if localplaylist exist
+let fileExist = fileHandler.fileExist(config.localFile);
+if (fileExist) {
+	// read the file and show it in the tree view
+	fileHandler.readPlaylistLineByLine((localPlaylistTracks: Array<string>) => {
+		vscode.window.registerTreeDataProvider("vsmp.openFolder", {
+			async getChildren() {
+				return localPlaylistTracks;
+			},
+			getTreeItem(url: string) {
+				let title = url.split("/").pop();
+				return {
+					// tooltip: `: ${track.title}`,
+					label: title,
+					// iconPath: track.icon ? vscode.Uri.parse(track.icon) : '',
+					command: {
+						command: "vsmp.play",
+						title: 'play',
+						arguments: [
+							url
+						]
+					}
+				};
 			}
-		};
-	}
-});
+		});
+	});
+} else {
+	// show button "upload local tracks" in tree view
+
+}
+
 // this method is called when your extension is deactivated
 export function deactivate() { }

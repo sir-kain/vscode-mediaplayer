@@ -1,9 +1,12 @@
-import { promisify } from "util";
+import { Disposable } from "vscode";
+import { promisify, callbackify } from "util";
 import * as config from "../data/config";
-const fs = require("fs"),
-  rl = require("readline"),
-  writeFileAsync = promisify(fs.writeFile),
-  appendFileAsync = promisify(fs.appendFile);
+import * as fs from "fs";
+import * as rl from "readline";
+import * as path from "path";
+const writeFileAsync = promisify(fs.writeFile),
+  appendFileAsync = promisify(fs.appendFile),
+  statAsync = promisify(fs.stat);
 
 export async function createPlaylistFile(content: string, type?: string) {
   try {
@@ -13,6 +16,31 @@ export async function createPlaylistFile(content: string, type?: string) {
       await writeFileAsync(config.searchFile, content);
     }
   } catch (error) {
-    console.log('error while creating file for search playlist ', type, error);
+    console.error('error while creating file for search playlist: ', type, error);
   }
+}
+
+export async function fileExist(file: string): Promise<Boolean> {
+  let exists: Boolean = true;
+  try {
+    await statAsync(file);
+  } catch (error) {
+    exists = false;
+    console.error(`Error while checking ${file} exists: ${error}`);
+  }
+  return exists;
+}
+
+export async function readPlaylistLineByLine(callback: (localPlaylistTracks: Array<string>) => void) {
+  let localPlaylistTracks: Array<string> = [];
+  let lineReader = rl.createInterface({
+    input: fs.createReadStream(config.localFile)
+  });
+
+  lineReader.on('line', (line: string) => {
+    localPlaylistTracks.push(line);
+  });
+  lineReader.on('close', () => {
+    callback(localPlaylistTracks);
+  });
 }
