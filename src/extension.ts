@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 						// populate the search file, will be used as the playlist for search
 						let tracks: Array<any> = [];
 						mediaList.map((track: Track) => tracks.push(track.url));
-						fileHandler.createPlaylistFile(tracks, "", await refreshLocalList);
+						fileHandler.createPlaylistFile(tracks, "default", await refreshLocalList);
 						myStatusBarItemPrev.text = '';
 						myStatusBarItemPrev.hide();
 						myStatusBarItemNext.text = '';
@@ -129,10 +129,45 @@ vscode.commands.registerCommand('vsmp.prev', async () => {
 		console.log("prev ", error);
 	}
 });
+vscode.commands.registerCommand('vsmp.loadLocalPlaylist', async () => {
+	myStatusBarItemPrev.text = '';
+	myStatusBarItemPrev.hide();
+	myStatusBarItemNext.text = '';
+	myStatusBarItemNext.hide();
+	myStatusBarItemTogglePlay.text = '';
+	myStatusBarItemTogglePlay.hide();
+	try {
+		let mpvIsRunning = await mpv.isRunning();
+		if (mpvIsRunning) {
+			await mpv.quit();
+		}
+		await mpv.start();
+		await mpv.loadPlaylist(config.localFile, "append");
+
+		myStatusBarItemPrev.text = `$(triangle-left)`;
+		myStatusBarItemPrev.tooltip = "Prev";
+		myStatusBarItemPrev.command = "vsmp.prev";
+		myStatusBarItemPrev.show();
+
+		myStatusBarItemTogglePlay.text = `$(dash) 00:00`;
+		myStatusBarItemTogglePlay.tooltip = "Pause";
+		myStatusBarItemTogglePlay.command = "vsmp.pause";
+		myStatusBarItemTogglePlay.show();
+
+		myStatusBarItemNext.text = `$(triangle-right)`;
+		myStatusBarItemNext.tooltip = "Next";
+		myStatusBarItemNext.command = "vsmp.next";
+		myStatusBarItemNext.show();
+	}
+	catch (error) {
+		console.error("err ", error);
+	}
+});
 vscode.commands.registerCommand('vsmp.lp.deteleTrack', async (itemToDelete) => {
 	// read file and delete item which match param
 	// await fileHandler.deleteFile(config.localFile);
 	await fileHandler.deleteTrackFile(itemToDelete, "local", await refreshLocalList);
+	await vscode.commands.executeCommand('vsmp.loadLocalPlaylist');
 });
 vscode.commands.registerCommand('vsmp.refreshLocalList', async () => {
 	await refreshLocalList();
@@ -153,7 +188,8 @@ vscode.commands.registerCommand('vsmp.openFolder', async () => {
 			});
 			// populate the local playlist file, will be used as the playlist for local media			
 			await fileHandler.createPlaylistFile(tracks, "local", await refreshLocalList);
-			// read the file and show it in the tree view			
+			// read the file and show it in the tree view		
+			await vscode.commands.executeCommand('vsmp.loadLocalPlaylist');	
 		}
 	});
 });

@@ -9,22 +9,23 @@ const writeFileAsync = promisify(fs.writeFile),
   statAsync = promisify(fs.stat);
 
 export async function createPlaylistFile(newTracks: Array<string>, type: string = "default", callback: () => void) {
-  await readPlaylistLineByLine(async localTracks => {
-    try {
-      if (type === 'local') {
+  if (type === 'local') {
+    await readPlaylistLineByLine(async localTracks => {
+      try {
         await deleteFile(config.localFile);
         let tracks = [...new Set(localTracks.concat(newTracks))];
         tracks.map(async track => {
           await appendFileAsync(config.localFile, track + '\r\n');
         });
         callback();
-      } else {
-        // await writeFileAsync(config.searchFile, content);
+      } catch (error) {
+        console.error('error while creating file for playlist: ', type, error);
       }
-    } catch (error) {
-      console.error('error while creating file for playlist: ', type, error);
-    }
-  });
+    });
+  } else {
+    // await writeFileAsync(config.searchFile, content);
+    newTracks.map(async track => await writeFileAsync(config.searchFile, track + `\r\n`));
+  }
 }
 
 export async function deleteTrackFile(trackToDelete: string, type: string = "default", callback: () => void) {
@@ -37,8 +38,6 @@ export async function deleteTrackFile(trackToDelete: string, type: string = "def
           await appendFileAsync(config.localFile, track + '\r\n');
         });
         callback();
-      } else {
-        // await writeFileAsync(config.searchFile, content);
       }
     } catch (error) {
       console.error('error while creating file for playlist: ', type, error);

@@ -45,6 +45,12 @@
 				"icon": "src/assets/music-player.svg"
 			},
 			{
+				"command": "vsmp.loadLocalPlaylist",
+				"title": "Load local playlist",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
 				"command": "vsmp.pause",
 				"title": "Pause",
 				"category": "Media player",
@@ -121,13 +127,18 @@
 					"group": "navigation"
 				},
 				{
-					"command": "vsmp.openFolder",
+					"command": "vsmp.refreshSearchList",
+					"when": "view == vsmp.mediaList",
+					"group": "navigation"
+				},
+				{
+					"command": "vsmp.loadLocalPlaylist",
 					"when": "view == vsmp.openFolder",
 					"group": "navigation"
 				},
 				{
-					"command": "vsmp.refreshSearchList",
-					"when": "view == vsmp.mediaList",
+					"command": "vsmp.openFolder",
+					"when": "view == vsmp.openFolder",
 					"group": "navigation"
 				},
 				{
