@@ -24,7 +24,7 @@ export async function createPlaylistFile(newTracks: Array<string>, type: string 
     });
   } else {
     // await writeFileAsync(config.searchFile, content);
-    newTracks.map(async track => await writeFileAsync(config.searchFile, track + `\r\n`));
+    newTracks.map(track => fs.writeFileSync(config.searchFile, track + `\r\n`));
   }
 }
 
