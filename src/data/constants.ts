@@ -8,4 +8,4 @@ export const Commands = {
   deteleTrack: "vsmp.lp.deteleTrack",
   refreshLocalList: "vsmp.refreshLocalList",
   openFolder: "vsmp.openFolder",
-}
+};

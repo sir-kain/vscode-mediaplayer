@@ -6,6 +6,7 @@ import * as path from "path";
 const writeFileAsync = promisify(fs.writeFile),
   appendFileAsync = promisify(fs.appendFile),
   deleteFileAsync = promisify(fs.unlink),
+  createWriteStreamAsync = promisify(fs.createWriteStream),
   statAsync = promisify(fs.stat);
 
 export async function createPlaylistFile(newTracks: Array<string>, type: string = "default", callback: () => void) {
@@ -85,4 +86,29 @@ export async function deleteFile(file: string) {
   } catch (error) {
     console.error("error deleting file ", error);
   }
+}
+
+// Create the file if it not exist
+// Write only the array provided
+export function writeSearchFile(file: string, trackUrls: string[]) {
+  fs.writeFileSync(file, '');
+  trackUrls.forEach(v => fs.appendFileSync(file, v + "\r\n"));
+}
+
+
+// Check file exist
+// Read the file 
+// And return content as an array
+export async function getContentFileAsAnArray(file: string) {
+  let isfileExist = await fileExist(file);
+  let content: string[] = [];
+  if (!isfileExist) {
+    return content;
+  }
+  content = fs
+    .readFileSync(file)
+    .toString()
+    .split("\r\n");
+  content = content.filter(item => item !== "");
+  return content;
 }

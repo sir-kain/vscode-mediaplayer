@@ -2,6 +2,7 @@ import { ExtensionContext, commands, window, Uri } from "vscode";
 import * as ressources from "./data/resources";
 import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler } from "./commands";
 import { Commands } from "./data/constants";
+import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
 import * as config from "./data/config";
 
@@ -18,10 +19,10 @@ export function activate(context: ExtensionContext) {
 							window.showInformationMessage(`No results matched "${keyword}"`);
 							return;
 						}
-						// populate the search file, will be used as the playlist for search
-						let tracks: Array<any> = [];
+						// Populate the search file, will be used the playlist for search
+						let tracks: string[] = [];
 						mediaList.map((track: Track) => tracks.push(track.url));
-						// fileHandler.createPlaylistFile(tracks, "default", await refreshLocalList);
+						fileHandler.writeSearchFile(config.searchFile, tracks);
 						commands.executeCommand(Commands.loadLocalPlaylist, config.searchFile);
 						return mediaList;
 					},

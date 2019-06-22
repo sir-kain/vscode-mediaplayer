@@ -3,10 +3,7 @@ const mpv = new mpvAPI({ "audio_only": true });
 
 export async function play(url: String) {
 	try {
-		let mpvIsRunning = await mpv.isRunning();
-		if (mpvIsRunning) {
-			await mpv.quit();
-		}
+		await quitMpvNeeded();
 		await mpv.start();
 		await mpv.load(url);
 	}
@@ -53,10 +50,7 @@ export async function resume() {
 
 export async function loadPlaylist(filePath: String) {
 	try {
-		const mpvIsRunning = await mpv.isRunning();
-		if (mpvIsRunning) {
-			await mpv.quit();
-		}
+		await quitMpvNeeded();
 		await mpv.start();
 		await mpv.loadPlaylist(filePath, "append");
 	}
@@ -65,4 +59,17 @@ export async function loadPlaylist(filePath: String) {
 	}
 }
 
+async function quitMpvNeeded() {
+	try {
+		const mpvIsRunning = await mpv.isRunning();
+		if (mpvIsRunning) {
+			await mpv.quit();
+		}
+	} catch (error) {
+		console.log('error ==>', error);
+	}
+}
 
+mpv.on('statuschange', (status: any) => {
+	console.log(status);
+});
