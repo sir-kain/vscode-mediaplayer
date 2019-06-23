@@ -7,13 +7,13 @@ const homedir = require("os").homedir(),
 
 // Create the file if it not exist
 // Write only the array provided
-function writeSearchFile(file, trackUrls) {
+function writeFile(file, trackUrls) {
   fs.writeFileSync(file, '');
   trackUrls.forEach(v => fs.appendFileSync(file, v + "\r\n"));
 }
 
 const arr = ["Fhttp://ir/e", "Ai@/r", "éééé", "o?ok=kk?o"];
-writeSearchFile(searchFilePath, arr);
+writeFile(searchFilePath, arr);
 
 // Check file exist
 // Read the file 

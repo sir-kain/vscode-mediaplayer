@@ -90,8 +90,10 @@ export async function deleteFile(file: string) {
 
 // Create the file if it not exist
 // Write only the array provided
-export function writeSearchFile(file: string, trackUrls: string[]) {
-  fs.writeFileSync(file, '');
+export function writeFile(file: string, trackUrls: string[]) {
+  // if (mode === 'erase') {
+    fs.writeFileSync(file, '');
+  // }
   trackUrls.forEach(v => fs.appendFileSync(file, v + "\r\n"));
 }
 

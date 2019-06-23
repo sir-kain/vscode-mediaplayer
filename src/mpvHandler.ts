@@ -70,6 +70,6 @@ async function quitMpvNeeded() {
 	}
 }
 
-mpv.on('statuschange', (status: any) => {
-	console.log(status);
-});
+// mpv.on('statuschange', (status: any) => {
+// 	console.log(status);
+// });
