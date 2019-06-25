@@ -1,4 +1,4 @@
-import { ExtensionContext, commands, window, Uri } from "vscode";
+import { ExtensionContext, commands, window, Uri, StatusBarAlignment } from "vscode";
 import * as ressources from "./data/resources";
 import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler } from "./commands";
 import { Commands } from "./data/constants";
@@ -6,6 +6,7 @@ import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
 import * as config from "./data/config";
 import { watchFile } from "fs";
+import { mpv } from "./mpvHandler";
 
 export function activate(context: ExtensionContext) {
 	initializer();
@@ -18,7 +19,7 @@ export function deactivate() { }
 
 function registerCommands() {
 	commands.registerCommand(Commands.searchMedia, async () => {
-		window.showQuickPick(["Deezer", "YouTube"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
+		window.showQuickPick(["Deezer", "YouTube", "Podcast"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return window.showInformationMessage("Please enter keyword!"); }
@@ -125,3 +126,61 @@ function arrayUnique(array: string[]) {
 	}
 	return a;
 }
+
+const button = {
+	prev: window.createStatusBarItem(StatusBarAlignment.Left, 100),
+	togglePlay: window.createStatusBarItem(StatusBarAlignment.Left, 100),
+	next: window.createStatusBarItem(StatusBarAlignment.Left, 100)
+};
+
+function stoppedState() {
+	button.prev.text = '';
+	button.prev.hide();
+	button.next.text = '';
+	button.next.hide();
+	button.togglePlay.text = '';
+	button.togglePlay.hide();
+}
+
+function runningState() {
+	button.prev.text = `$(triangle-left)`;
+	button.prev.tooltip = "Prev";
+	button.prev.command = "vsmp.prev";
+	button.prev.show();
+
+	button.togglePlay.text = `$(dash) 00:00`;
+	button.togglePlay.tooltip = "Pause";
+	button.togglePlay.command = "vsmp.pause";
+	button.togglePlay.show();
+
+	button.next.text = `$(triangle-right)`;
+	button.next.tooltip = "Next";
+	button.next.command = "vsmp.next";
+	button.next.show();
+}
+
+// mpvHandler.on('statuschange', (status: any) => {
+// 	console.log(status);
+// });
+
+mpv.on('started', () => {
+	console.log("started");
+	runningState();
+});
+
+mpv.on('stopped', () => {
+	console.log("stopped");
+	stoppedState();
+});
+
+mpv.on('paused', () => {
+	console.log('paused ==>');
+	button.togglePlay.text = `$(dash) 00:00`;
+	button.togglePlay.tooltip = "Play";
+	button.togglePlay.command = "vsmp.play";
+	button.togglePlay.show();
+});
+
+mpv.on('crashed', () => {
+	console.log("crached");
+});
