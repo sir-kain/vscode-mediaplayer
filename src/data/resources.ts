@@ -35,6 +35,22 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                 };
             });
             break;
+        case "Podcast":
+            res = await fetch("https://listen-api.listennotes.com/api/v2/search?q=" + encodeURIComponent(name), {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-ListenAPI-Key': "dca4aaf4712e4faa81315fbd3aa18bd2"
+                }
+            });
+            let resJson = await res.json();
+            tracks = resJson["results"].map((data: any) => {
+                return {
+                    title: data.title_original,
+                    icon: data.thumbnail,
+                    url: data.audio
+                };
+            });
+            break;
     }
     return tracks;
 }

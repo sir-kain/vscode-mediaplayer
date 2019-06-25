@@ -1,5 +1,6 @@
 import * as mpvAPI from "node-mpv";
-const mpv = new mpvAPI({ "audio_only": true });
+import * as config from "./data/config";
+const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
 
 export async function play(url: String) {
 	try {
@@ -48,7 +49,7 @@ export async function resume() {
 	}
 }
 
-export async function loadPlaylist(filePath: String) {
+export async function loadPlaylist(filePath: String = config.localFile) {
 	try {
 		await quitMpvNeeded();
 		await mpv.start();
@@ -70,6 +71,5 @@ async function quitMpvNeeded() {
 	}
 }
 
-// mpv.on('statuschange', (status: any) => {
-// 	console.log(status);
-// });
+export const mpv = Mpv;
+
