@@ -36,7 +36,7 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
             });
             break;
         case "Podcast":
-            res = await fetch("https://listen-api.listennotes.com/api/v2/search?q=" + encodeURIComponent(name), {
+            res = await fetch("https://listen-api.listennotes.com/api/v2/search?type=episode&q=" + encodeURIComponent(name), {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-ListenAPI-Key': "dca4aaf4712e4faa81315fbd3aa18bd2"
