@@ -71,7 +71,7 @@ declare class node_mpv {
 
     getProperty(property: any): any;
 
-    getTimePosition(): any;
+    getTimePosition(): string;
 
     getTimeRemaining(): any;
 

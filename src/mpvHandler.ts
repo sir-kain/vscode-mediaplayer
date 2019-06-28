@@ -49,6 +49,18 @@ export async function resume() {
 	}
 }
 
+export async function getTimePosition(): Promise<string> {
+	let timePos: string = '';
+	try {
+		let timePosInSecond = await mpv.getTimePosition();
+		timePos = new Date(parseInt(timePosInSecond) * 1000).toISOString().substr(11, 8);
+	}
+	catch (error) {
+		console.log("getTimePosition ", error);
+	}
+	return timePos;
+}
+
 export async function loadPlaylist(filePath: string = config.localFile) {
 	try {
 		await quitMpvNeeded();
