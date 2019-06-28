@@ -163,7 +163,7 @@
 // 		console.error("err ", error);
 // 	}
 // });
-// vscode.commands.registerCommand('vsmp.lp.deteleTrack', async (itemToDelete) => {
+// vscode.commands.registerCommand('vsmp.pl.deteleTrack', async (itemToDelete) => {
 // 	// read file and delete item which match param
 // 	// await fileHandler.deleteFile(config.localFile);
 // 	await fileHandler.deleteTrackFile(itemToDelete, "local", await refreshLocalList);

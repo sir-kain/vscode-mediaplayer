@@ -71,8 +71,8 @@ function registerCommands() {
 		loadingState();
 		await loadPlaylistHandler(config.localFile);
 	});
-	commands.registerCommand(Commands.loadSearchPlaylist, async () => { 
-		loadingState(); 
+	commands.registerCommand(Commands.loadSearchPlaylist, async () => {
+		loadingState();
 		await loadPlaylistHandler(config.searchFile);
 	});
 	commands.registerCommand(Commands.loadFavPlaylist, async () => {
@@ -101,6 +101,22 @@ function registerCommands() {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
 		const tracks = fileContent.filter(content => content !== itemToDelete);
 		fileHandler.writeFile(config.localFile, tracks);
+	});
+
+	commands.registerCommand(Commands.favTrack, async (trackFav: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
+		if (!fileContent.includes(trackFav)) {
+			const tracks = fileContent.concat(trackFav);
+			fileHandler.writeFile(config.favFile, tracks);
+		} else {
+			// already added to fav
+		}
+	});
+
+	commands.registerCommand(Commands.unFavTrack, async (track: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
+		const tracks = fileContent.filter(content => content !== track);
+		fileHandler.writeFile(config.favFile, tracks);
 	});
 }
 

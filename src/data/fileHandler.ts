@@ -99,7 +99,7 @@ export function writeFile(file: string, trackUrls: string[]) {
 // Check file exist
 // Read the file 
 // And return content as an array
-export async function getContentFileAsAnArray(file: string) {
+export async function getContentFileAsAnArray(file: string): Promise<string[]> {
   let isfileExist = await fileExist(file);
   let content: string[] = [];
   if (!isfileExist) {
