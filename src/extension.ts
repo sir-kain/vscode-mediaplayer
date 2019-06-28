@@ -34,7 +34,6 @@ function registerCommands() {
 						let tracks: string[] = [];
 						mediaList.map((track: Track) => tracks.push(track.url));
 						fileHandler.writeFile(config.searchFile, tracks);
-						// commands.executeCommand(Commands.loadLocalPlaylist, config.searchFile);
 						return mediaList;
 					},
 					getTreeItem(track: Track) {
@@ -62,7 +61,9 @@ function registerCommands() {
 	commands.registerCommand(Commands.prev, prevHandler);
 	commands.registerCommand(Commands.resume, resumeHandler);
 	commands.registerCommand(Commands.next, nextHandler);
-	commands.registerCommand(Commands.loadLocalPlaylist, (filePath: string) => loadPlaylistHandler(filePath));
+	commands.registerCommand(Commands.loadLocalPlaylist, async () => await loadPlaylistHandler(config.localFile));
+	commands.registerCommand(Commands.loadSearchPlaylist, async () => await loadPlaylistHandler(config.searchFile));
+	commands.registerCommand(Commands.loadFavPlaylist, async () => await loadPlaylistHandler(config.favFile));
 	commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
 			canSelectMany: true,
@@ -96,7 +97,6 @@ async function initializer() {
 watchFile(config.localFile, async (curr, prev) => {
 	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
 	updateLocalTreeView(tracks);
-	// commands.executeCommand(Commands.loadLocalPlaylist, config.localFile);
 });
 
 function updateLocalTreeView(tracks: string[]) {

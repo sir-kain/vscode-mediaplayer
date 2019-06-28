@@ -51,6 +51,18 @@
 				"icon": "src/assets/music-player.svg"
 			},
 			{
+				"command": "vsmp.loadSearchPlaylist",
+				"title": "Load search playlist",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.loadFavPlaylist",
+				"title": "Load fav playlist",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
 				"command": "vsmp.pause",
 				"title": "Pause",
 				"category": "Media player",
@@ -113,7 +125,7 @@
 					"name": "Search"
 				},
 				{
-					"id": "vsmp.play",
+					"id": "vsmp.fav",
 					"name": "Playlist"
 				},
 				{
@@ -144,8 +156,18 @@
 					"group": "navigation"
 				},
 				{
+					"command": "vsmp.loadSearchPlaylist",
+					"when": "view == vsmp.mediaList",
+					"group": "navigation"
+				},
+				{
 					"command": "vsmp.loadLocalPlaylist",
 					"when": "view == vsmp.openFolder",
+					"group": "navigation"
+				},
+				{
+					"command": "vsmp.loadFavPlaylist",
+					"when": "view == vsmp.fav",
 					"group": "navigation"
 				},
 				{
