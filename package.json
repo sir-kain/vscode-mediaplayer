@@ -113,7 +113,17 @@
 				}
 			},
 			{
-				"command": "vsmp.lp.deteleTrack",
+				"command": "vsmp.pl.favTrack",
+				"title": "add track to favs list",
+				"icon": "src/assets/delete.svg"
+			},
+			{
+				"command": "vsmp.pl.unFavTrack",
+				"title": "Remove track to favs list",
+				"icon": "src/assets/delete.svg"
+			},
+			{
+				"command": "vsmp.pl.deteleTrack",
 				"title": "Delete track",
 				"icon": "src/assets/delete.svg"
 			}
@@ -183,7 +193,17 @@
 			],
 			"view/item/context": [
 				{
-					"command": "vsmp.lp.deteleTrack",
+					"command": "vsmp.pl.favTrack",
+					"when": "view == vsmp.openFolder",
+					"group": "inline"
+				},
+				{
+					"command": "vsmp.pl.unFavTrack",
+					"when": "view == vsmp.fav",
+					"group": "inline"
+				},
+				{
+					"command": "vsmp.pl.deteleTrack",
 					"when": "view == vsmp.openFolder",
 					"group": "inline"
 				}

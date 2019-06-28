@@ -9,7 +9,9 @@ export const Commands = {
   loadLocalPlaylist: "vsmp.loadLocalPlaylist",
   loadSearchPlaylist: "vsmp.loadSearchPlaylist",
   loadFavPlaylist: "vsmp.loadFavPlaylist",
-  deteleTrack: "vsmp.lp.deteleTrack",
+  deteleTrack: "vsmp.pl.deteleTrack",
+  favTrack: "vsmp.pl.favTrack",
+  unFavTrack: "vsmp.pl.unFavTrack",
   refreshLocalList: "vsmp.refreshLocalList",
   openFolder: "vsmp.openFolder",
   searchMedia: "vsmp.searchMedia"
