@@ -105,17 +105,24 @@ function registerCommands() {
 }
 
 async function initializer() {
-	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateLocalTreeView(tracks);
+	const localTracks = await fileHandler.getContentFileAsAnArray(config.localFile);
+	updateTreeView("vsmp.openFolder", localTracks);
+	const favTracks = await fileHandler.getContentFileAsAnArray(config.favFile);
+	updateTreeView("vsmp.fav", favTracks);
 }
 
 watchFile(config.localFile, async (curr, prev) => {
 	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateLocalTreeView(tracks);
+	updateTreeView("vsmp.openFolder", tracks);
 });
 
-function updateLocalTreeView(tracks: string[]) {
-	window.registerTreeDataProvider("vsmp.openFolder", {
+watchFile(config.favFile, async (curr, prev) => {
+	const tracks = await fileHandler.getContentFileAsAnArray(config.favFile);
+	updateTreeView("vsmp.fav", tracks);
+});
+
+function updateTreeView(view: string, tracks: string[]) {
+	window.registerTreeDataProvider(view, {
 		getChildren() {
 			return tracks;
 		},
