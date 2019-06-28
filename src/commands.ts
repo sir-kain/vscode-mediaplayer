@@ -33,4 +33,8 @@ export async function openFolderHandler() {
 export async function deteleTrackHandler() {
 }
 
+export async function getTimePositionFormated(): Promise<string> {
+   const timePos = await mpv.getTimePosition();
+   return timePos;
+}
 

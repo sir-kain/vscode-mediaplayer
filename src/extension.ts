@@ -1,6 +1,6 @@
 import { ExtensionContext, commands, window, Uri, StatusBarAlignment } from "vscode";
 import * as ressources from "./data/resources";
-import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler } from "./commands";
+import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
@@ -136,19 +136,19 @@ const button = {
 function stoppedState() {
 	button.prev.text = '';
 	button.prev.hide();
-	button.next.text = '';
-	button.next.hide();
 	button.togglePlay.text = '';
 	button.togglePlay.hide();
+	button.next.text = '';
+	button.next.hide();
 }
 
-function runningState() {
+function runningState(timePos: string) {
 	button.prev.text = `$(triangle-left)`;
 	button.prev.tooltip = "Prev";
 	button.prev.command = "vsmp.prev";
 	button.prev.show();
 
-	button.togglePlay.text = `$(dash) 00:00`;
+	button.togglePlay.text = `$(dash) ${timePos}`;
 	button.togglePlay.tooltip = "Pause";
 	button.togglePlay.command = "vsmp.pause";
 	button.togglePlay.show();
@@ -159,13 +159,31 @@ function runningState() {
 	button.next.show();
 }
 
+function pausedState(timePos: string) {
+	button.prev.text = `$(triangle-left)`;
+	button.prev.tooltip = "Prev";
+	button.prev.command = "";
+	button.prev.show();
+
+	button.togglePlay.text = `$(play) ${timePos}`;
+	button.togglePlay.tooltip = "Resume";
+	button.togglePlay.command = "vsmp.resume";
+	button.togglePlay.show();
+
+	button.next.text = `$(triangle-right)`;
+	button.next.tooltip = "Next";
+	button.next.command = "";
+	button.next.show();
+}
+
 // mpvHandler.on('statuschange', (status: any) => {
 // 	console.log(status);
 // });
 
-mpv.on('started', () => {
+mpv.on('started', async () => {
 	console.log("started");
-	runningState();
+	let timePos = await getTimePositionFormated();
+	runningState(timePos);
 });
 
 mpv.on('stopped', () => {
@@ -173,12 +191,23 @@ mpv.on('stopped', () => {
 	stoppedState();
 });
 
-mpv.on('paused', () => {
+mpv.on('paused', async () => {
 	console.log('paused ==>');
-	button.togglePlay.text = `$(dash) 00:00`;
-	button.togglePlay.tooltip = "Play";
-	button.togglePlay.command = "vsmp.play";
-	button.togglePlay.show();
+	const timePos = await getTimePositionFormated();
+	pausedState(timePos);
+});
+
+mpv.on('resumed', async () => {
+	console.log('resumed ==>');
+	const timePos = await getTimePositionFormated();
+	runningState(timePos);
+});
+
+mpv.on('timeposition', async (timePosInSecond: number) => {
+	console.log('timePosInSecond ==>', timePosInSecond);
+	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
+	runningState(timePos);
+	// do we need 'resumed' event ?
 });
 
 mpv.on('crashed', () => {
