@@ -1,6 +1,6 @@
 import * as mpv from "./mpvHandler";
 
-export async function playHandler(url: String) {
+export async function playHandler(url: string) {
    await mpv.play(url);
 }
 
@@ -20,7 +20,7 @@ export async function resumeHandler() {
    await mpv.resume();
 }
 
-export async function loadPlaylistHandler(filePath: String) {
+export async function loadPlaylistHandler(filePath: string) {
    await mpv.loadPlaylist(filePath);
 }
 

@@ -9,7 +9,7 @@ const writeFileAsync = promisify(fs.writeFile),
   createWriteStreamAsync = promisify(fs.createWriteStream),
   statAsync = promisify(fs.stat);
 
-export async function createPlaylistFile(newTracks: Array<string>, type: string = "default", callback: () => void) {
+export async function createPlaylistFile(newTracks: string[], type: string = "default", callback: () => void) {
   if (type === 'local') {
     await readPlaylistLineByLine(async localTracks => {
       try {
@@ -56,8 +56,8 @@ export async function fileExist(file: string): Promise<Boolean> {
   return exists;
 }
 
-export async function readPlaylistLineByLine(callback: (localPlaylistTracks: Array<string>) => void) {
-  let localPlaylistTracks: Array<string> = [];
+export async function readPlaylistLineByLine(callback: (localPlaylistTracks: string[]) => void) {
+  let localPlaylistTracks: string[] = [];
   let fileExists = await fileExist(config.localFile);
   if (fileExists) {
     let lineReader = rl.createInterface({
@@ -91,9 +91,7 @@ export async function deleteFile(file: string) {
 // Create the file if it not exist
 // Write only the array provided
 export function writeFile(file: string, trackUrls: string[]) {
-  // if (mode === 'erase') {
-    fs.writeFileSync(file, '');
-  // }
+  fs.writeFileSync(file, '');
   trackUrls.forEach(v => fs.appendFileSync(file, v + "\r\n"));
 }
 
