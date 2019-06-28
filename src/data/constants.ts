@@ -12,7 +12,6 @@ export const Commands = {
   deteleTrack: "vsmp.pl.deteleTrack",
   favTrack: "vsmp.pl.favTrack",
   unFavTrack: "vsmp.pl.unFavTrack",
-  refreshLocalList: "vsmp.refreshLocalList",
   openFolder: "vsmp.openFolder",
   searchMedia: "vsmp.searchMedia"
 };
