@@ -75,6 +75,18 @@
 				"icon": "src/assets/music-player.svg"
 			},
 			{
+				"command": "vsmp.prevTo",
+				"title": "Go back",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
+				"command": "vsmp.nextTo",
+				"title": "Jump to",
+				"category": "Media player",
+				"icon": "src/assets/music-player.svg"
+			},
+			{
 				"command": "vsmp.stop",
 				"title": "Stop",
 				"category": "Media player",
