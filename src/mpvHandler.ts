@@ -1,6 +1,7 @@
 import * as mpvAPI from "node-mpv";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
+const TIMETOJUMP: number = 20;
 
 export async function play(url: string) {
 	try {
@@ -37,6 +38,30 @@ export async function pause() {
 	}
 	catch (error) {
 		console.log("pause ", error);
+	}
+}
+
+export async function jumpToPrev() {
+	try {
+		const currentPosition = parseInt(await mpv.getTimePosition());
+		if (currentPosition > TIMETOJUMP) {
+			await mpv.goToPosition(currentPosition - TIMETOJUMP);
+		} else {
+			await mpv.goToPosition(0);
+		}
+	}
+	catch (error) {
+		console.log("jumpToPrev ", error);
+	}
+}
+
+export async function jumpToNext() {
+	try {
+		const currentPosition = parseInt(await mpv.getTimePosition());
+		await mpv.goToPosition(currentPosition + TIMETOJUMP);
+	}
+	catch (error) {
+		console.log("jumpToNext ", error);
 	}
 }
 

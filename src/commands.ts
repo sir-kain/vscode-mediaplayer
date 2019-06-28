@@ -4,6 +4,14 @@ export async function playHandler(url: string) {
    await mpv.play(url);
 }
 
+export async function jumpToPrevHandler() {
+   await mpv.jumpToPrev();
+}
+
+export async function jumpToNextHandler() {
+   await mpv.jumpToNext();
+}
+
 export async function pauseHandler() {
    await mpv.pause();
 }

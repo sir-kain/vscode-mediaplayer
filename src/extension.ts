@@ -1,6 +1,6 @@
 import { ExtensionContext, commands, window, Uri, StatusBarAlignment } from "vscode";
 import * as ressources from "./data/resources";
-import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
+import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
@@ -57,9 +57,11 @@ function registerCommands() {
 	});
 	commands.registerCommand(Commands.play, (url: string) => playHandler(url));
 	commands.registerCommand(Commands.pause, pauseHandler);
-	commands.registerCommand(Commands.next, nextHandler);
+	commands.registerCommand(Commands.prevTo, jumpToPrevHandler);
+	commands.registerCommand(Commands.nextTo, jumpToNextHandler);
 	commands.registerCommand(Commands.prev, prevHandler);
 	commands.registerCommand(Commands.resume, resumeHandler);
+	commands.registerCommand(Commands.next, nextHandler);
 	commands.registerCommand(Commands.loadLocalPlaylist, (filePath: string) => loadPlaylistHandler(filePath));
 	commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
@@ -128,9 +130,11 @@ function arrayUnique(array: string[]) {
 }
 
 const button = {
+	prevJumpTo: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	prev: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	togglePlay: window.createStatusBarItem(StatusBarAlignment.Left, 100),
-	next: window.createStatusBarItem(StatusBarAlignment.Left, 100)
+	next: window.createStatusBarItem(StatusBarAlignment.Left, 100),
+	nextJumpTo: window.createStatusBarItem(StatusBarAlignment.Left, 100)
 };
 
 function stoppedState() {
@@ -140,9 +144,18 @@ function stoppedState() {
 	button.togglePlay.hide();
 	button.next.text = '';
 	button.next.hide();
+	button.nextJumpTo.text = '';
+	button.nextJumpTo.hide();
+	button.prevJumpTo.text = '';
+	button.prevJumpTo.hide();
 }
 
 function runningState(timePos: string) {
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "vsmp.prevTo";
+	button.prevJumpTo.show();
+
 	button.prev.text = `$(triangle-left)`;
 	button.prev.tooltip = "Prev";
 	button.prev.command = "vsmp.prev";
@@ -157,6 +170,11 @@ function runningState(timePos: string) {
 	button.next.tooltip = "Next";
 	button.next.command = "vsmp.next";
 	button.next.show();
+	
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "vsmp.nextTo";
+	button.nextJumpTo.show();
 }
 
 function pausedState(timePos: string) {
@@ -165,10 +183,20 @@ function pausedState(timePos: string) {
 	button.prev.command = "";
 	button.prev.show();
 
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "";
+	button.prevJumpTo.show();
+
 	button.togglePlay.text = `$(play) ${timePos}`;
 	button.togglePlay.tooltip = "Resume";
 	button.togglePlay.command = "vsmp.resume";
 	button.togglePlay.show();
+
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "";
+	button.nextJumpTo.show();
 
 	button.next.text = `$(triangle-right)`;
 	button.next.tooltip = "Next";
