@@ -81,6 +81,11 @@ function registerCommands() {
 			}
 		});
 	});
+	commands.registerCommand(Commands.deteleTrack, async (itemToDelete: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
+		const tracks = fileContent.filter(content => content !== itemToDelete);
+		fileHandler.writeFile(config.localFile, tracks);
+	});
 }
 
 async function initializer() {
@@ -170,7 +175,7 @@ function runningState(timePos: string) {
 	button.next.tooltip = "Next";
 	button.next.command = "vsmp.next";
 	button.next.show();
-	
+
 	button.nextJumpTo.text = `$(chevron-right)`;
 	button.nextJumpTo.tooltip = "Move to";
 	button.nextJumpTo.command = "vsmp.nextTo";
