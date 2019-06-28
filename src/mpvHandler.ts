@@ -2,7 +2,7 @@ import * as mpvAPI from "node-mpv";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
 
-export async function play(url: String) {
+export async function play(url: string) {
 	try {
 		await quitMpvNeeded();
 		await mpv.start();
@@ -49,7 +49,7 @@ export async function resume() {
 	}
 }
 
-export async function loadPlaylist(filePath: String = config.localFile) {
+export async function loadPlaylist(filePath: string = config.localFile) {
 	try {
 		await quitMpvNeeded();
 		await mpv.start();

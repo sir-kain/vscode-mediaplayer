@@ -55,12 +55,12 @@ function registerCommands() {
 			});
 		});
 	});
-	commands.registerCommand(Commands.play, (url: String) => playHandler(url));
+	commands.registerCommand(Commands.play, (url: string) => playHandler(url));
 	commands.registerCommand(Commands.pause, pauseHandler);
 	commands.registerCommand(Commands.next, nextHandler);
 	commands.registerCommand(Commands.prev, prevHandler);
 	commands.registerCommand(Commands.resume, resumeHandler);
-	commands.registerCommand(Commands.loadLocalPlaylist, (filePath: String) => loadPlaylistHandler(filePath));
+	commands.registerCommand(Commands.loadLocalPlaylist, (filePath: string) => loadPlaylistHandler(filePath));
 	commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
 			canSelectMany: true,
@@ -73,9 +73,9 @@ function registerCommands() {
 			let tracks: string[] = [];
 			if (fileUri) {
 				tracks = fileUri.map(url => url.fsPath);
-				let fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
+				const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
 				const tracksToAdd = arrayUnique(tracks.concat(fileContent));
-				await fileHandler.writeFile(config.localFile, tracksToAdd);
+				fileHandler.writeFile(config.localFile, tracksToAdd);
 			}
 		});
 	});
