@@ -58,12 +58,27 @@ function registerCommands() {
 	commands.registerCommand(Commands.pause, pauseHandler);
 	commands.registerCommand(Commands.prevTo, jumpToPrevHandler);
 	commands.registerCommand(Commands.nextTo, jumpToNextHandler);
-	commands.registerCommand(Commands.prev, prevHandler);
+	commands.registerCommand(Commands.prev, () => {
+		loadingState();
+		prevHandler();
+	});
 	commands.registerCommand(Commands.resume, resumeHandler);
-	commands.registerCommand(Commands.next, nextHandler);
-	commands.registerCommand(Commands.loadLocalPlaylist, async () => await loadPlaylistHandler(config.localFile));
-	commands.registerCommand(Commands.loadSearchPlaylist, async () => await loadPlaylistHandler(config.searchFile));
-	commands.registerCommand(Commands.loadFavPlaylist, async () => await loadPlaylistHandler(config.favFile));
+	commands.registerCommand(Commands.next, () => {
+		loadingState();
+		nextHandler();
+	});
+	commands.registerCommand(Commands.loadLocalPlaylist, async () => {
+		loadingState();
+		await loadPlaylistHandler(config.localFile);
+	});
+	commands.registerCommand(Commands.loadSearchPlaylist, async () => { 
+		loadingState(); 
+		await loadPlaylistHandler(config.searchFile);
+	});
+	commands.registerCommand(Commands.loadFavPlaylist, async () => {
+		loadingState();
+		await loadPlaylistHandler(config.favFile);
+	});
 	commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
 			canSelectMany: true,
@@ -182,6 +197,33 @@ function runningState(timePos: string) {
 	button.nextJumpTo.show();
 }
 
+function loadingState() {
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "";
+	button.prevJumpTo.show();
+
+	button.prev.text = `$(triangle-left)`;
+	button.prev.tooltip = "Prev";
+	button.prev.command = "";
+	button.prev.show();
+
+	button.togglePlay.text = `$(sync~spin)Loading ...`;
+	button.togglePlay.tooltip = "Loading";
+	button.togglePlay.command = "";
+	button.togglePlay.show();
+
+	button.next.text = `$(triangle-right)`;
+	button.next.tooltip = "Next";
+	button.next.command = "";
+	button.next.show();
+
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "";
+	button.nextJumpTo.show();
+}
+
 function pausedState(timePos: string) {
 	button.prev.text = `$(triangle-left)`;
 	button.prev.tooltip = "Prev";
@@ -237,8 +279,8 @@ mpv.on('resumed', async () => {
 });
 
 mpv.on('timeposition', async (timePosInSecond: number) => {
-	console.log('timePosInSecond ==>', timePosInSecond);
 	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
+	console.log('timePos >', timePos);
 	runningState(timePos);
 	// do we need 'resumed' event ?
 });
