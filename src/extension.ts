@@ -23,34 +23,7 @@ function registerCommands() {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return window.showInformationMessage("Please enter keyword!"); }
-				window.registerTreeDataProvider("vsmp.mediaList", {
-					async getChildren() {
-						const mediaList = await ressources.searchTracks(provider, keyword);
-						if (!mediaList || !mediaList.length) {
-							window.showInformationMessage(`No results matched "${keyword}"`);
-							return;
-						}
-						// Populate the search file, will be used the playlist for search
-						let tracks: string[] = [];
-						mediaList.map((track: Track) => tracks.push(track.url));
-						fileHandler.writeFile(config.searchFile, tracks);
-						return mediaList;
-					},
-					getTreeItem(track: Track) {
-						return {
-							tooltip: `${provider}: ${track.title}`,
-							label: track.title,
-							iconPath: track.icon ? Uri.parse(track.icon) : '',
-							command: {
-								command: Commands.play,
-								title: 'play',
-								arguments: [
-									track.url
-								]
-							}
-						};
-					}
-				});
+				updateSearchTreeView("vsmp.mediaList", provider, keyword);
 			});
 		});
 	});
@@ -153,6 +126,37 @@ function updateTreeView(view: string, tracks: string[]) {
 					title: 'play',
 					arguments: [
 						url
+					]
+				}
+			};
+		}
+	});
+}
+
+function updateSearchTreeView(view: string, provider: string, keyword: string) {
+	window.registerTreeDataProvider(view, {
+		async getChildren() {
+			const mediaList = await ressources.searchTracks(provider, keyword);
+			if (!mediaList || !mediaList.length) {
+				window.showInformationMessage(`No results matched "${keyword}"`);
+				return;
+			}
+			// Populate the search file, will be used the playlist for search
+			let tracks: string[] = [];
+			mediaList.map((track: Track) => tracks.push(track.url));
+			fileHandler.writeFile(config.searchFile, tracks);
+			return mediaList;
+		},
+		getTreeItem(track: Track) {
+			return {
+				tooltip: `${provider}: ${track.title}`,
+				label: track.title,
+				iconPath: track.icon ? Uri.parse(track.icon) : '',
+				command: {
+					command: Commands.play,
+					title: 'play',
+					arguments: [
+						track.url
 					]
 				}
 			};
