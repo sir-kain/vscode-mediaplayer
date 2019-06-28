@@ -86,8 +86,9 @@ export async function getTimePosition(): Promise<string> {
 	return timePos;
 }
 
-export async function loadPlaylist(filePath: string = config.localFile) {
+export async function loadPlaylist(filePath: string) {
 	try {
+		if (!filePath) { return; }
 		await quitMpvNeeded();
 		await mpv.start();
 		await mpv.loadPlaylist(filePath, "append");
@@ -97,7 +98,7 @@ export async function loadPlaylist(filePath: string = config.localFile) {
 	}
 }
 
-async function quitMpvNeeded() {
+async function quitMpvNeeded(): Promise<void> {
 	try {
 		const mpvIsRunning = await mpv.isRunning();
 		if (mpvIsRunning) {

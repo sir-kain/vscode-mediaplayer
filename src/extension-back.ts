@@ -129,7 +129,7 @@
 // 		console.log("prev ", error);
 // 	}
 // });
-// vscode.commands.registerCommand('vsmp.loadLocalPlaylist', async () => {
+// vscode.commands.registerCommand('vsmp.loadPlaylist', async () => {
 // 	myStatusBarItemPrev.text = '';
 // 	myStatusBarItemPrev.hide();
 // 	myStatusBarItemNext.text = '';
@@ -167,7 +167,7 @@
 // 	// read file and delete item which match param
 // 	// await fileHandler.deleteFile(config.localFile);
 // 	await fileHandler.deleteTrackFile(itemToDelete, "local", await refreshLocalList);
-// 	await vscode.commands.executeCommand('vsmp.loadLocalPlaylist');
+// 	await vscode.commands.executeCommand('vsmp.loadPlaylist');
 // });
 // vscode.commands.registerCommand('vsmp.refreshLocalList', async () => {
 // 	await refreshLocalList();
@@ -189,7 +189,7 @@
 // 			// populate the local playlist file, will be used as the playlist for local media			
 // 			await fileHandler.createPlaylistFile(tracks, "local", await refreshLocalList);
 // 			// read the file and show it in the tree view		
-// 			await vscode.commands.executeCommand('vsmp.loadLocalPlaylist');	
+// 			await vscode.commands.executeCommand('vsmp.loadPlaylist');	
 // 		}
 // 	});
 // });

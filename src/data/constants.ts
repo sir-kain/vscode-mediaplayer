@@ -7,6 +7,8 @@ export const Commands = {
   prev: "vsmp.prev",
   resume: "vsmp.resume",
   loadLocalPlaylist: "vsmp.loadLocalPlaylist",
+  loadSearchPlaylist: "vsmp.loadSearchPlaylist",
+  loadFavPlaylist: "vsmp.loadFavPlaylist",
   deteleTrack: "vsmp.lp.deteleTrack",
   refreshLocalList: "vsmp.refreshLocalList",
   openFolder: "vsmp.openFolder",
