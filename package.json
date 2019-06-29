@@ -101,14 +101,6 @@
 				"category": "Media player"
 			},
 			{
-				"command": "vsmp.refreshSearchList",
-				"title": "Refresh",
-				"icon": {
-					"dark": "src/assets/dark/refresh.svg",
-					"light": "src/assets/light/refresh.svg"
-				}
-			},
-			{
 				"command": "vsmp.pl.favTrack",
 				"title": "add track to favs list",
 				"icon": {
@@ -162,11 +154,6 @@
 			"view/title": [
 				{
 					"command": "vsmp.searchMedia",
-					"when": "view == vsmp.mediaList",
-					"group": "navigation"
-				},
-				{
-					"command": "vsmp.refreshSearchList",
 					"when": "view == vsmp.mediaList",
 					"group": "navigation"
 				},
