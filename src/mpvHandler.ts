@@ -1,8 +1,9 @@
 import * as mpvAPI from "node-mpv";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
+const TIMETOJUMP: number = 20;
 
-export async function play(url: String) {
+export async function play(url: string) {
 	try {
 		await quitMpvNeeded();
 		await mpv.start();
@@ -40,6 +41,30 @@ export async function pause() {
 	}
 }
 
+export async function jumpToPrev() {
+	try {
+		const currentPosition = parseInt(await mpv.getTimePosition());
+		if (currentPosition > TIMETOJUMP) {
+			await mpv.goToPosition(currentPosition - TIMETOJUMP);
+		} else {
+			await mpv.goToPosition(0);
+		}
+	}
+	catch (error) {
+		console.log("jumpToPrev ", error);
+	}
+}
+
+export async function jumpToNext() {
+	try {
+		const currentPosition = parseInt(await mpv.getTimePosition());
+		await mpv.goToPosition(currentPosition + TIMETOJUMP);
+	}
+	catch (error) {
+		console.log("jumpToNext ", error);
+	}
+}
+
 export async function resume() {
 	try {
 		await mpv.resume();
@@ -49,8 +74,21 @@ export async function resume() {
 	}
 }
 
-export async function loadPlaylist(filePath: String = config.localFile) {
+export async function getTimePosition(): Promise<string> {
+	let timePos: string = '';
 	try {
+		let timePosInSecond = await mpv.getTimePosition();
+		timePos = new Date(parseInt(timePosInSecond) * 1000).toISOString().substr(11, 8);
+	}
+	catch (error) {
+		console.log("getTimePosition ", error);
+	}
+	return timePos;
+}
+
+export async function loadPlaylist(filePath: string) {
+	try {
+		if (!filePath) { return; }
 		await quitMpvNeeded();
 		await mpv.start();
 		await mpv.loadPlaylist(filePath, "append");
@@ -60,7 +98,7 @@ export async function loadPlaylist(filePath: String = config.localFile) {
 	}
 }
 
-async function quitMpvNeeded() {
+async function quitMpvNeeded(): Promise<void> {
 	try {
 		const mpvIsRunning = await mpv.isRunning();
 		if (mpvIsRunning) {

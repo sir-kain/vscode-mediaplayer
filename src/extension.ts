@@ -1,6 +1,6 @@
 import { ExtensionContext, commands, window, Uri, StatusBarAlignment } from "vscode";
 import * as ressources from "./data/resources";
-import { playHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler } from "./commands";
+import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
@@ -23,44 +23,35 @@ function registerCommands() {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return window.showInformationMessage("Please enter keyword!"); }
-				window.registerTreeDataProvider("vsmp.mediaList", {
-					async getChildren() {
-						const mediaList = await ressources.searchTracks(provider, keyword);
-						if (!mediaList || !mediaList.length) {
-							window.showInformationMessage(`No results matched "${keyword}"`);
-							return;
-						}
-						// Populate the search file, will be used the playlist for search
-						let tracks: string[] = [];
-						mediaList.map((track: Track) => tracks.push(track.url));
-						fileHandler.writeFile(config.searchFile, tracks);
-						commands.executeCommand(Commands.loadLocalPlaylist, config.searchFile);
-						return mediaList;
-					},
-					getTreeItem(track: Track) {
-						return {
-							tooltip: `${provider}: ${track.title}`,
-							label: track.title,
-							iconPath: track.icon ? Uri.parse(track.icon) : '',
-							command: {
-								command: Commands.play,
-								title: 'play',
-								arguments: [
-									track.url
-								]
-							}
-						};
-					}
-				});
+				updateSearchTreeView("vsmp.mediaList", provider, keyword);
 			});
 		});
 	});
-	commands.registerCommand(Commands.play, (url: String) => playHandler(url));
+	commands.registerCommand(Commands.play, (url: string) => playHandler(url));
 	commands.registerCommand(Commands.pause, pauseHandler);
-	commands.registerCommand(Commands.next, nextHandler);
-	commands.registerCommand(Commands.prev, prevHandler);
+	commands.registerCommand(Commands.prevTo, jumpToPrevHandler);
+	commands.registerCommand(Commands.nextTo, jumpToNextHandler);
+	commands.registerCommand(Commands.prev, () => {
+		loadingState();
+		prevHandler();
+	});
 	commands.registerCommand(Commands.resume, resumeHandler);
-	commands.registerCommand(Commands.loadLocalPlaylist, (filePath: String) => loadPlaylistHandler(filePath));
+	commands.registerCommand(Commands.next, () => {
+		loadingState();
+		nextHandler();
+	});
+	commands.registerCommand(Commands.loadLocalPlaylist, async () => {
+		loadingState();
+		await loadPlaylistHandler(config.localFile);
+	});
+	commands.registerCommand(Commands.loadSearchPlaylist, async () => {
+		loadingState();
+		await loadPlaylistHandler(config.searchFile);
+	});
+	commands.registerCommand(Commands.loadFavPlaylist, async () => {
+		loadingState();
+		await loadPlaylistHandler(config.favFile);
+	});
 	commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
 			canSelectMany: true,
@@ -73,27 +64,54 @@ function registerCommands() {
 			let tracks: string[] = [];
 			if (fileUri) {
 				tracks = fileUri.map(url => url.fsPath);
-				let fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
+				const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
 				const tracksToAdd = arrayUnique(tracks.concat(fileContent));
-				await fileHandler.writeFile(config.localFile, tracksToAdd);
+				fileHandler.writeFile(config.localFile, tracksToAdd);
 			}
 		});
+	});
+	commands.registerCommand(Commands.deteleTrack, async (itemToDelete: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
+		const tracks = fileContent.filter(content => content !== itemToDelete);
+		fileHandler.writeFile(config.localFile, tracks);
+	});
+
+	commands.registerCommand(Commands.favTrack, async (trackFav: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
+		if (!fileContent.includes(trackFav)) {
+			const tracks = fileContent.concat(trackFav);
+			fileHandler.writeFile(config.favFile, tracks);
+		} else {
+			// already added to fav
+		}
+	});
+
+	commands.registerCommand(Commands.unFavTrack, async (track: string) => {
+		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
+		const tracks = fileContent.filter(content => content !== track);
+		fileHandler.writeFile(config.favFile, tracks);
 	});
 }
 
 async function initializer() {
-	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateLocalTreeView(tracks);
+	const localTracks = await fileHandler.getContentFileAsAnArray(config.localFile);
+	updateTreeView("vsmp.openFolder", localTracks);
+	const favTracks = await fileHandler.getContentFileAsAnArray(config.favFile);
+	updateTreeView("vsmp.fav", favTracks);
 }
 
 watchFile(config.localFile, async (curr, prev) => {
 	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateLocalTreeView(tracks);
-	commands.executeCommand(Commands.loadLocalPlaylist, config.localFile);
+	updateTreeView("vsmp.openFolder", tracks);
 });
 
-function updateLocalTreeView(tracks: string[]) {
-	window.registerTreeDataProvider("vsmp.openFolder", {
+watchFile(config.favFile, async (curr, prev) => {
+	const tracks = await fileHandler.getContentFileAsAnArray(config.favFile);
+	updateTreeView("vsmp.fav", tracks);
+});
+
+function updateTreeView(view: string, tracks: string[]) {
+	window.registerTreeDataProvider(view, {
 		getChildren() {
 			return tracks;
 		},
@@ -115,6 +133,37 @@ function updateLocalTreeView(tracks: string[]) {
 	});
 }
 
+function updateSearchTreeView(view: string, provider: string, keyword: string) {
+	window.registerTreeDataProvider(view, {
+		async getChildren() {
+			const mediaList = await ressources.searchTracks(provider, keyword);
+			if (!mediaList || !mediaList.length) {
+				window.showInformationMessage(`No results matched "${keyword}"`);
+				return;
+			}
+			// Populate the search file, will be used the playlist for search
+			let tracks: string[] = [];
+			mediaList.map((track: Track) => tracks.push(track.url));
+			fileHandler.writeFile(config.searchFile, tracks);
+			return mediaList;
+		},
+		getTreeItem(track: Track) {
+			return {
+				tooltip: `${provider}: ${track.title}`,
+				label: track.title,
+				iconPath: track.icon ? Uri.parse(track.icon) : '',
+				command: {
+					command: Commands.play,
+					title: 'play',
+					arguments: [
+						track.url
+					]
+				}
+			};
+		}
+	});
+}
+
 function arrayUnique(array: string[]) {
 	let a = array.concat();
 	for (let i = 0; i < a.length; ++i) {
@@ -128,27 +177,38 @@ function arrayUnique(array: string[]) {
 }
 
 const button = {
+	prevJumpTo: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	prev: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	togglePlay: window.createStatusBarItem(StatusBarAlignment.Left, 100),
-	next: window.createStatusBarItem(StatusBarAlignment.Left, 100)
+	next: window.createStatusBarItem(StatusBarAlignment.Left, 100),
+	nextJumpTo: window.createStatusBarItem(StatusBarAlignment.Left, 100)
 };
 
 function stoppedState() {
 	button.prev.text = '';
 	button.prev.hide();
-	button.next.text = '';
-	button.next.hide();
 	button.togglePlay.text = '';
 	button.togglePlay.hide();
+	button.next.text = '';
+	button.next.hide();
+	button.nextJumpTo.text = '';
+	button.nextJumpTo.hide();
+	button.prevJumpTo.text = '';
+	button.prevJumpTo.hide();
 }
 
-function runningState() {
+function runningState(timePos: string) {
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "vsmp.prevTo";
+	button.prevJumpTo.show();
+
 	button.prev.text = `$(triangle-left)`;
 	button.prev.tooltip = "Prev";
 	button.prev.command = "vsmp.prev";
 	button.prev.show();
 
-	button.togglePlay.text = `$(dash) 00:00`;
+	button.togglePlay.text = `$(dash) ${timePos}`;
 	button.togglePlay.tooltip = "Pause";
 	button.togglePlay.command = "vsmp.pause";
 	button.togglePlay.show();
@@ -157,15 +217,75 @@ function runningState() {
 	button.next.tooltip = "Next";
 	button.next.command = "vsmp.next";
 	button.next.show();
+
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "vsmp.nextTo";
+	button.nextJumpTo.show();
+}
+
+function loadingState() {
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "";
+	button.prevJumpTo.show();
+
+	button.prev.text = `$(triangle-left)`;
+	button.prev.tooltip = "Prev";
+	button.prev.command = "";
+	button.prev.show();
+
+	button.togglePlay.text = `$(sync~spin)Loading ...`;
+	button.togglePlay.tooltip = "Loading";
+	button.togglePlay.command = "";
+	button.togglePlay.show();
+
+	button.next.text = `$(triangle-right)`;
+	button.next.tooltip = "Next";
+	button.next.command = "";
+	button.next.show();
+
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "";
+	button.nextJumpTo.show();
+}
+
+function pausedState(timePos: string) {
+	button.prev.text = `$(triangle-left)`;
+	button.prev.tooltip = "Prev";
+	button.prev.command = "";
+	button.prev.show();
+
+	button.prevJumpTo.text = `$(chevron-left)`;
+	button.prevJumpTo.tooltip = "Back to";
+	button.prevJumpTo.command = "";
+	button.prevJumpTo.show();
+
+	button.togglePlay.text = `$(play) ${timePos}`;
+	button.togglePlay.tooltip = "Resume";
+	button.togglePlay.command = "vsmp.resume";
+	button.togglePlay.show();
+
+	button.nextJumpTo.text = `$(chevron-right)`;
+	button.nextJumpTo.tooltip = "Move to";
+	button.nextJumpTo.command = "";
+	button.nextJumpTo.show();
+
+	button.next.text = `$(triangle-right)`;
+	button.next.tooltip = "Next";
+	button.next.command = "";
+	button.next.show();
 }
 
 // mpvHandler.on('statuschange', (status: any) => {
 // 	console.log(status);
 // });
 
-mpv.on('started', () => {
+mpv.on('started', async () => {
 	console.log("started");
-	runningState();
+	let timePos = await getTimePositionFormated();
+	runningState(timePos);
 });
 
 mpv.on('stopped', () => {
@@ -173,12 +293,23 @@ mpv.on('stopped', () => {
 	stoppedState();
 });
 
-mpv.on('paused', () => {
+mpv.on('paused', async () => {
 	console.log('paused ==>');
-	button.togglePlay.text = `$(dash) 00:00`;
-	button.togglePlay.tooltip = "Play";
-	button.togglePlay.command = "vsmp.play";
-	button.togglePlay.show();
+	const timePos = await getTimePositionFormated();
+	pausedState(timePos);
+});
+
+mpv.on('resumed', async () => {
+	console.log('resumed ==>');
+	const timePos = await getTimePositionFormated();
+	runningState(timePos);
+});
+
+mpv.on('timeposition', async (timePosInSecond: number) => {
+	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
+	console.log('timePos >', timePos);
+	runningState(timePos);
+	// do we need 'resumed' event ?
 });
 
 mpv.on('crashed', () => {

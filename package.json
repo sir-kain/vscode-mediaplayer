@@ -19,14 +19,9 @@
 				"command": "vsmp.searchMedia",
 				"title": "Search",
 				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
-			},
-			{
-				"command": "vsmp.refreshLocalList",
-				"title": "Refresh",
 				"icon": {
-					"dark": "src/assets/dark/refresh.svg",
-					"light": "src/assets/light/refresh.svg"
+					"dark": "src/assets/dark/search.png",
+					"light": "src/assets/light/search.png"
 				}
 			},
 			{
@@ -41,57 +36,93 @@
 			{
 				"command": "vsmp.play",
 				"title": "Play",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
 			},
 			{
 				"command": "vsmp.loadLocalPlaylist",
 				"title": "Load local playlist",
 				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"icon": {
+					"dark": "src/assets/dark/play.png",
+					"light": "src/assets/light/play.png"
+				}
+			},
+			{
+				"command": "vsmp.loadSearchPlaylist",
+				"title": "Load search playlist",
+				"category": "Media player",
+				"icon": {
+					"dark": "src/assets/dark/play.png",
+					"light": "src/assets/light/play.png"
+				}
+			},
+			{
+				"command": "vsmp.loadFavPlaylist",
+				"title": "Load fav playlist",
+				"category": "Media player",
+				"icon": {
+					"dark": "src/assets/dark/play.png",
+					"light": "src/assets/light/play.png"
+				}
 			},
 			{
 				"command": "vsmp.pause",
 				"title": "Pause",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
 			},
 			{
 				"command": "vsmp.resume",
 				"title": "Resume",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
 			},
 			{
 				"command": "vsmp.next",
 				"title": "Next",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
 			},
 			{
 				"command": "vsmp.prev",
 				"title": "Previous",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
+			},
+			{
+				"command": "vsmp.prevTo",
+				"title": "Go back",
+				"category": "Media player"
+			},
+			{
+				"command": "vsmp.nextTo",
+				"title": "Jump to",
+				"category": "Media player"
 			},
 			{
 				"command": "vsmp.stop",
 				"title": "Stop",
-				"category": "Media player",
-				"icon": "src/assets/music-player.svg"
+				"category": "Media player"
 			},
 			{
-				"command": "vsmp.refreshSearchList",
-				"title": "Refresh",
+				"command": "vsmp.pl.favTrack",
+				"title": "add track to favs list",
 				"icon": {
-					"dark": "src/assets/dark/refresh.svg",
-					"light": "src/assets/light/refresh.svg"
+					"dark": "src/assets/dark/fav.png",
+					"light": "src/assets/light/fav.png"
 				}
 			},
 			{
-				"command": "vsmp.lp.deteleTrack",
+				"command": "vsmp.pl.unFavTrack",
+				"title": "Remove track to favs list",
+				"icon": {
+					"dark": "src/assets/dark/unfav.png",
+					"light": "src/assets/light/unfav.png"
+				}
+			},
+			{
+				"command": "vsmp.pl.deteleTrack",
 				"title": "Delete track",
-				"icon": "src/assets/delete.svg"
+				"icon": {
+					"dark": "src/assets/dark/delete.png",
+					"light": "src/assets/light/delete.png"
+				}
 			}
 		],
 		"views": {
@@ -101,8 +132,8 @@
 					"name": "Search"
 				},
 				{
-					"id": "vsmp.play",
-					"name": "Playlist"
+					"id": "vsmp.fav",
+					"name": "Favs"
 				},
 				{
 					"id": "vsmp.openFolder",
@@ -114,8 +145,8 @@
 			"activitybar": [
 				{
 					"id": "vsmp",
-					"icon": "src/assets/crotchet.svg",
-					"title": "Media player"
+					"title": "Media player",
+					"icon": "src/assets/vscmpicon.png"
 				}
 			]
 		},
@@ -127,7 +158,7 @@
 					"group": "navigation"
 				},
 				{
-					"command": "vsmp.refreshSearchList",
+					"command": "vsmp.loadSearchPlaylist",
 					"when": "view == vsmp.mediaList",
 					"group": "navigation"
 				},
@@ -137,19 +168,29 @@
 					"group": "navigation"
 				},
 				{
-					"command": "vsmp.openFolder",
-					"when": "view == vsmp.openFolder",
+					"command": "vsmp.loadFavPlaylist",
+					"when": "view == vsmp.fav",
 					"group": "navigation"
 				},
 				{
-					"command": "vsmp.refreshLocalList",
+					"command": "vsmp.openFolder",
 					"when": "view == vsmp.openFolder",
 					"group": "navigation"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "vsmp.lp.deteleTrack",
+					"command": "vsmp.pl.favTrack",
+					"when": "view == vsmp.openFolder",
+					"group": "inline"
+				},
+				{
+					"command": "vsmp.pl.unFavTrack",
+					"when": "view == vsmp.fav",
+					"group": "inline"
+				},
+				{
+					"command": "vsmp.pl.deteleTrack",
 					"when": "view == vsmp.openFolder",
 					"group": "inline"
 				}
