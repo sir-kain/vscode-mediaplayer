@@ -32,9 +32,6 @@ export async function loadPlaylistHandler(filePath: string) {
    await mpv.loadPlaylist(filePath);
 }
 
-export async function refreshListHandler() {
-}
-
 export async function openFolderHandler() {
 }
 
