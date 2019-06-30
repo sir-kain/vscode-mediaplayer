@@ -193,6 +193,11 @@
 					"command": "vsmp.pl.deteleTrack",
 					"when": "view == vsmp.openFolder",
 					"group": "inline"
+				},
+				{
+					"command": "vsmp.pl.favTrack",
+					"when": "view == vsmp.mediaList",
+					"group": "inline"
 				}
 			]
 		}

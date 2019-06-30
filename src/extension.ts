@@ -76,10 +76,11 @@ function registerCommands() {
 		fileHandler.writeFile(config.localFile, tracks);
 	});
 
-	commands.registerCommand(Commands.favTrack, async (trackFav: string) => {
+	commands.registerCommand(Commands.favTrack, async (trackFav: string | Track) => {
+		const track: string = typeof trackFav === 'string' ? trackFav : trackFav.url;
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
-		if (!fileContent.includes(trackFav)) {
-			const tracks = fileContent.concat(trackFav);
+		if (!fileContent.includes(track)) {
+			const tracks = fileContent.concat(track);
 			fileHandler.writeFile(config.favFile, tracks);
 		} else {
 			// already added to fav
