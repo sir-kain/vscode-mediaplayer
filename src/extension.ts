@@ -1,4 +1,4 @@
-import { ExtensionContext, commands, window, Uri, StatusBarAlignment } from "vscode";
+import { ExtensionContext, commands, window, Uri, StatusBarAlignment, workspace, ViewColumn } from "vscode";
 import * as ressources from "./data/resources";
 import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
 import { Commands } from "./data/constants";
@@ -91,6 +91,25 @@ function registerCommands() {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
 		const tracks = fileContent.filter(content => content !== track);
 		fileHandler.writeFile(config.favFile, tracks);
+	});
+
+	commands.registerCommand(Commands.viewTrackDetail, (track: Track) => {
+		console.log('track ==>', track);
+		// const uri = Uri.parse("ok:" + track.title);
+		// Create and show panel
+
+		commands.executeCommand('markdown.api.render', track.description).then(result => {
+			console.log(`rendered markdown: ${result}`);
+			const panel = window.createWebviewPanel(
+				'vscmp',
+				track.title,
+				ViewColumn.One,
+				{}
+			);
+	
+			// And set its HTML content
+			panel.webview.html = getWebviewContent(track, result);
+		});
 	});
 }
 
@@ -316,3 +335,23 @@ mpv.on('timeposition', async (timePosInSecond: number) => {
 mpv.on('crashed', () => {
 	console.log("crached");
 });
+
+function getWebviewContent(track: Track, result: any) {
+	return `<!DOCTYPE html>
+	<html lang="en">
+	<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>${track.title}</title>
+	</head>
+	<body>
+			<div>
+				<h2> ${track.title} </h2>
+				<img src="${track.icon}" width="200" />
+				<p>
+					${result}
+				</p>
+			</div>
+	</body>
+	</html>`;
+}

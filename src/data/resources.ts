@@ -27,13 +27,17 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
             break;
         case "YouTube":
             tracks = await youtube.searchVideos(name, 20);
+            console.log(tracks);
             tracks = tracks.map((data: any) => {
                 return {
                     title: data.title,
                     icon: data.raw.snippet.thumbnails.default.url,
-                    url: `https://www.youtube.com/watch?v=${data.id}`
+                    url: `https://www.youtube.com/watch?v=${data.id}`,
+                    description: data.description
                 };
             });
+
+            console.log('tracks ==>', tracks);
             break;
         case "Podcast":
             res = await fetch("https://listen-api.listennotes.com/api/v2/search?type=episode&q=" + encodeURIComponent(name), {
@@ -43,11 +47,13 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                 }
             });
             let resJson = await res.json();
+            console.log('resJson[] ==>', resJson['results']);
             tracks = resJson["results"].map((data: any) => {
                 return {
                     title: data.title_original,
                     icon: data.thumbnail,
-                    url: data.audio
+                    url: data.audio,
+                    description: data.description_original
                 };
             });
             break;

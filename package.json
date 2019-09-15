@@ -2,6 +2,7 @@
 	"name": "vscode-mediaplayer",
 	"displayName": "vscode-mediaplayer",
 	"description": "vscode extension to play media",
+	"publisher": "sirkane",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.34.0"
