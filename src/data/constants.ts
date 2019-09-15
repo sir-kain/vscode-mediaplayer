@@ -13,5 +13,6 @@ export const Commands = {
   favTrack: "vsmp.pl.favTrack",
   unFavTrack: "vsmp.pl.unFavTrack",
   openFolder: "vsmp.openFolder",
-  searchMedia: "vsmp.searchMedia"
+  searchMedia: "vsmp.searchMedia",
+  viewTrackDetail: "vsmp.viewTrackDetail"
 };
