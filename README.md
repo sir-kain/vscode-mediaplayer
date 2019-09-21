@@ -1,6 +1,9 @@
 # vscode-mediaplayer README
 
-This is the README for your extension "vscode-mediaplayer". After writing up a brief description, we recommend including the following sections.
+A vscode extension that allows you to code by listning sounds 
+
+PODCAST
+YOUTUBE
 
 ## Features
 
@@ -14,7 +17,9 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+This module requires mpv to be installed on your system to work. On Windows you can provide the path to the mpv.exe using the binary option, when creating the mpv instance
+
+For streaming playback from sources such as YouTube and SoundCloud youtube-dl is required
 
 ## Extension Settings
 
