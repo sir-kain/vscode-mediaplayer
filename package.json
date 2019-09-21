@@ -233,7 +233,7 @@
 	"dependencies": {
 		"@types/node-fetch": "^2.3.4",
 		"node-fetch": "^2.6.0",
-		"node-mpv": "https://github.com/00SteinsGate00/Node-MPV.git#Node-MPV-2",
+		"node-mpv-km": "^2.0.0",
 		"simple-youtube-api": "^5.1.1"
 	}
 }
