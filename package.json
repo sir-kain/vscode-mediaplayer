@@ -2,6 +2,7 @@
 	"name": "vscode-mediaplayer",
 	"displayName": "vscode-mediaplayer",
 	"description": "vscode extension to play media",
+	"publisher": "sirkane",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.34.0"
@@ -109,6 +110,14 @@
 				}
 			},
 			{
+				"command": "vsmp.viewTrackDetail",
+				"title": "View the track details",
+				"icon": {
+					"dark": "src/assets/dark/eye.png",
+					"light": "src/assets/light/eye.png"
+				}
+			},
+			{
 				"command": "vsmp.pl.unFavTrack",
 				"title": "Remove track to favs list",
 				"icon": {
@@ -196,6 +205,11 @@
 				},
 				{
 					"command": "vsmp.pl.favTrack",
+					"when": "view == vsmp.mediaList",
+					"group": "inline"
+				},
+				{
+					"command": "vsmp.viewTrackDetail",
 					"when": "view == vsmp.mediaList",
 					"group": "inline"
 				}
