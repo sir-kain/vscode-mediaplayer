@@ -528,9 +528,10 @@ node-fetch@^2.2.1, node-fetch@^2.6.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
-"node-mpv@https://github.com/00SteinsGate00/Node-MPV.git#Node-MPV-2":
-  version "1.1.2"
-  resolved "https://github.com/00SteinsGate00/Node-MPV.git#95907f5d3c27fbf0c56c57f59bd9f04da27e24a9"
+node-mpv-km@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-mpv-km/-/node-mpv-km-2.0.0.tgz#598be1bf96031475db2d1821fdf43e842e366e55"
+  integrity sha512-5kWx/ivNnHjPdH8iJbdVGyonG/OkUZbPznCPwE74vN1cqryMdPu8UezkwSSKz78zRoUIBft0AxuCyWw3KGErKA==
   dependencies:
     cuid "^2.1.1"
 
