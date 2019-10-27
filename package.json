@@ -3,7 +3,7 @@
 	"displayName": "Mediaplayer",
 	"description": "Mediaplayer extention for VS Code",
 	"publisher": "sirkane",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": {
     "name": "sir_kane"
 	},
