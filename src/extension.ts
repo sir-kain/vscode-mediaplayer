@@ -19,7 +19,7 @@ export function deactivate() { }
 
 function registerCommands() {
 	commands.registerCommand(Commands.searchMedia, async () => {
-		window.showQuickPick(["Deezer", "YouTube", "Podcast"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
+		window.showQuickPick(["YouTube", "Podcast"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return window.showInformationMessage("Please enter keyword!"); }

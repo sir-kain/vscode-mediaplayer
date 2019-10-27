@@ -6,6 +6,11 @@ An extension that allows you to code by listning sounds inside Vscode
 PODCAST
 YOUTUBE
 
+[![Badge for version for Visual Studio Code extension sirkane.vscode-mediaplayer](https://vsmarketplacebadge.apphb.com/version/sirkane.vscode-mediaplayer.svg?color=blue&style=?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/johnpapa.vscode-peacock.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
+[![Downloads](https://vsmarketplacebadge.apphb.com/downloads/sirkane.vscode-mediaplayer.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating-short/sirkane.vscode-mediaplayer.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
+
 # Requirements
 This extension requires **mpv** and **youtube-dl** to be installed on your system to work.
 
@@ -58,6 +63,11 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 ### 1.0.0
 
 Initial release
+
+### 1.0.1
+
+- Improve README.md file
+- Remove Deezer option on the quickpick modal
 -----------------------------------------------------------------------------------------------------------
 
 **Enjoy!**
