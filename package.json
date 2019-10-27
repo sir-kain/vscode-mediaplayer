@@ -29,7 +29,7 @@
 		"Youtube",
 		"Stream"
 	],
-	"icon": "src/assets/vscmpicon.png",
+	"icon": "assets/vscmpicon.png",
 	"bugs": {
     "url": "https://github.com/sir-kain/vscode-mediaplayer/issues",
     "email": "ahmadouwalyndiaye@gmail.com"
@@ -46,8 +46,8 @@
 				"title": "Search",
 				"category": "Media player",
 				"icon": {
-					"dark": "src/assets/dark/search.png",
-					"light": "src/assets/light/search.png"
+					"dark": "assets/dark/search.png",
+					"light": "assets/light/search.png"
 				}
 			},
 			{
@@ -55,8 +55,8 @@
 				"title": "Import local media",
 				"category": "Media player",
 				"icon": {
-					"dark": "src/assets/dark/folder.svg",
-					"light": "src/assets/light/folder.svg"
+					"dark": "assets/dark/folder.svg",
+					"light": "assets/light/folder.svg"
 				}
 			},
 			{
@@ -69,8 +69,8 @@
 				"title": "Load local playlist",
 				"category": "Media player",
 				"icon": {
-					"dark": "src/assets/dark/play.png",
-					"light": "src/assets/light/play.png"
+					"dark": "assets/dark/play.png",
+					"light": "assets/light/play.png"
 				}
 			},
 			{
@@ -78,8 +78,8 @@
 				"title": "Load search playlist",
 				"category": "Media player",
 				"icon": {
-					"dark": "src/assets/dark/play.png",
-					"light": "src/assets/light/play.png"
+					"dark": "assets/dark/play.png",
+					"light": "assets/light/play.png"
 				}
 			},
 			{
@@ -87,8 +87,8 @@
 				"title": "Load fav playlist",
 				"category": "Media player",
 				"icon": {
-					"dark": "src/assets/dark/play.png",
-					"light": "src/assets/light/play.png"
+					"dark": "assets/dark/play.png",
+					"light": "assets/light/play.png"
 				}
 			},
 			{
@@ -130,32 +130,32 @@
 				"command": "vsmp.pl.favTrack",
 				"title": "add track to favs list",
 				"icon": {
-					"dark": "src/assets/dark/fav.png",
-					"light": "src/assets/light/fav.png"
+					"dark": "assets/dark/fav.png",
+					"light": "assets/light/fav.png"
 				}
 			},
 			{
 				"command": "vsmp.viewTrackDetail",
 				"title": "View the track details",
 				"icon": {
-					"dark": "src/assets/dark/eye.png",
-					"light": "src/assets/light/eye.png"
+					"dark": "assets/dark/eye.png",
+					"light": "assets/light/eye.png"
 				}
 			},
 			{
 				"command": "vsmp.pl.unFavTrack",
 				"title": "Remove track to favs list",
 				"icon": {
-					"dark": "src/assets/dark/unfav.png",
-					"light": "src/assets/light/unfav.png"
+					"dark": "assets/dark/unfav.png",
+					"light": "assets/light/unfav.png"
 				}
 			},
 			{
 				"command": "vsmp.pl.deteleTrack",
 				"title": "Delete track",
 				"icon": {
-					"dark": "src/assets/dark/delete.png",
-					"light": "src/assets/light/delete.png"
+					"dark": "assets/dark/delete.png",
+					"light": "assets/light/delete.png"
 				}
 			}
 		],
@@ -180,7 +180,7 @@
 				{
 					"id": "vsmp",
 					"title": "Media player",
-					"icon": "src/assets/vscmpicon.png"
+					"icon": "assets/vscmpicon.png"
 				}
 			]
 		},
