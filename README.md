@@ -7,7 +7,6 @@ PODCAST
 YOUTUBE
 
 [![Badge for version for Visual Studio Code extension sirkane.vscode-mediaplayer](https://vsmarketplacebadge.apphb.com/version/sirkane.vscode-mediaplayer.svg?color=blue&style=?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/johnpapa.vscode-peacock.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
 [![Downloads](https://vsmarketplacebadge.apphb.com/downloads/sirkane.vscode-mediaplayer.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
 [![Rating](https://vsmarketplacebadge.apphb.com/rating-short/sirkane.vscode-mediaplayer.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
 
