@@ -1,6 +1,6 @@
 import fetch, { Response } from 'node-fetch';
-import * as env from "dotenv";
-env.config();
+import * as ENV from "dotenv";
+ENV.config();
 import { Track } from './models/Track';
 import * as YouTube from "simple-youtube-api";
 const youtube = new YouTube('AIzaSyC3URt50QfVuOAxJvls1CcqXs-rGLbHf88');
