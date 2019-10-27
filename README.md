@@ -1,70 +1,63 @@
-# vscode-mediaplayer README
+# Mediaplayer for Visual Studio Code
 
-A vscode extension that allows you to code by listning sounds 
+![VSCMP Icon](./assets/screen.png 'Vscmp')
 
+An extension that allows you to code by listning sounds inside Vscode
 PODCAST
 YOUTUBE
 
+# Requirements
+This extension requires **mpv** and **youtube-dl** to be installed on your system to work.
+
+
+#### OS X
+
+```
+brew install mpv youtube-dl
+```
+
+#### Linux (Ubuntu/Debian)
+
+```
+sudo apt-get install mpv youtube-dl
+```
+
+#### Windows
+
+Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://youtube-dl.org) and follow the install instructions.
+
+
+**youtube-dl** is only required if you want to stream music from *YouTube*.
+
+
+## Install
+
+1. Open **Extensions** sideBar panel in Visual Studio Code and choose the menu options for **View → Extensions**
+1. Search for `mediaplayer`
+1. Click **Install**
+1. Click **Reload**, if required
+
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Search on youtube and [listennotes](https://www.listennotes.com/)
+- Upload your local media
+- Load the playlist (Plat, Resume, Next, Prev, ...)
+- View the track description
+- Add a track to your favorites
+- Delete a track
 
-For example if there is an image subfolder under your extension project workspace:
+## Resources
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-This module requires mpv to be installed on your system to work. On Windows you can provide the path to the mpv.exe using the binary option, when creating the mpv instance
-
-For streaming playback from sources such as YouTube and SoundCloud youtube-dl is required
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- [Get VS Code](https://code.visualstudio.com/?wt.mc_id=peacock-github-sir-kain)
+- [Create your first VS Code extension](https://code.visualstudio.com/api/get-started/your-first-extension?wt.mc_id=peacock-github-sir-kain)
+- [VS Code Extension API](https://code.visualstudio.com/api/references/vscode-api?wt.mc_id=peacock-github-sir-kain)
+- [Learn how to add WebPack bundles to your favorite extensions](https://code.visualstudio.com/updates/v1_32#_bundling-extensions-with-webpack?wt.mc_id=peacock-github-sir-kain)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
+Initial release
 -----------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
