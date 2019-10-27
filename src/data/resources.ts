@@ -1,4 +1,6 @@
 import fetch, { Response } from 'node-fetch';
+import * as ENV from "dotenv";
+ENV.config();
 import { Track } from './models/Track';
 import * as YouTube from "simple-youtube-api";
 const youtube = new YouTube('AIzaSyC3URt50QfVuOAxJvls1CcqXs-rGLbHf88');
@@ -43,11 +45,10 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
             res = await fetch("https://listen-api.listennotes.com/api/v2/search?type=episode&q=" + encodeURIComponent(name), {
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-ListenAPI-Key': "X-ListenAPI-Key"
+                    'X-ListenAPI-Key': process.env.LISTENNOTE_KEY || 'Your api key'
                 }
             });
             let resJson = await res.json();
-            console.log('resJson[] ==>', resJson['results']);
             tracks = resJson["results"].map((data: any) => {
                 return {
                     title: data.title_original,
