@@ -1,9 +1,16 @@
 {
 	"name": "vscode-mediaplayer",
-	"displayName": "vscode-mediaplayer",
-	"description": "vscode extension to play media",
+	"displayName": "Mediaplayer",
+	"description": "Mediaplayer extention for VS Code",
 	"publisher": "sirkane",
 	"version": "0.0.1",
+	"author": {
+    "name": "sir_kane"
+	},
+	"galleryBanner": {
+    "color": "#373436",
+    "theme": "dark"
+  },
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sir-kain/vscode-mediaplayer.git"
@@ -14,6 +21,20 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+		"Media",
+		"Music",
+		"Player",
+		"Podcast",
+		"Youtube",
+		"Stream"
+	],
+	"icon": "src/assets/vscmpicon.png",
+	"bugs": {
+    "url": "https://github.com/sir-kain/vscode-mediaplayer/issues",
+    "email": "ahmadouwalyndiaye@gmail.com"
+	},
+	"homepage": "https://github.com/sir-kain/vscode-mediaplayer/blob/master/README.md",
 	"activationEvents": [
 		"*"
 	],
