@@ -10,15 +10,15 @@ import { mpv } from "./mpvHandler";
 
 export function activate(context: ExtensionContext) {
 	initializer();
-	registerCommands();
+	registerCommands(context);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
 
 
-function registerCommands() {
-	commands.registerCommand(Commands.searchMedia, async () => {
+function registerCommands(context: ExtensionContext) {
+	const searchMedia = commands.registerCommand(Commands.searchMedia, async () => {
 		window.showQuickPick(["YouTube", "Podcast"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
@@ -27,32 +27,32 @@ function registerCommands() {
 			});
 		});
 	});
-	commands.registerCommand(Commands.play, (url: string) => playHandler(url));
-	commands.registerCommand(Commands.pause, pauseHandler);
-	commands.registerCommand(Commands.prevTo, jumpToPrevHandler);
-	commands.registerCommand(Commands.nextTo, jumpToNextHandler);
-	commands.registerCommand(Commands.prev, () => {
+	const playMedia = commands.registerCommand(Commands.play, (url: string) => playHandler(url));
+	const pauseMedia = commands.registerCommand(Commands.pause, pauseHandler);
+	const prevtoMedia = commands.registerCommand(Commands.prevTo, jumpToPrevHandler);
+	const nexttoMedia = commands.registerCommand(Commands.nextTo, jumpToNextHandler);
+	const prevMedia = commands.registerCommand(Commands.prev, () => {
 		loadingState();
 		prevHandler();
 	});
-	commands.registerCommand(Commands.resume, resumeHandler);
-	commands.registerCommand(Commands.next, () => {
+	const resumeMedia = commands.registerCommand(Commands.resume, resumeHandler);
+	const nextMedia = commands.registerCommand(Commands.next, () => {
 		loadingState();
 		nextHandler();
 	});
-	commands.registerCommand(Commands.loadLocalPlaylist, async () => {
+	const loadLocalPlaylist = commands.registerCommand(Commands.loadLocalPlaylist, async () => {
 		loadingState();
 		await loadPlaylistHandler(config.localFile);
 	});
-	commands.registerCommand(Commands.loadSearchPlaylist, async () => {
+	const loadSearchPlaylist = commands.registerCommand(Commands.loadSearchPlaylist, async () => {
 		loadingState();
 		await loadPlaylistHandler(config.searchFile);
 	});
-	commands.registerCommand(Commands.loadFavPlaylist, async () => {
+	const loadFavPlaylist = commands.registerCommand(Commands.loadFavPlaylist, async () => {
 		loadingState();
 		await loadPlaylistHandler(config.favFile);
 	});
-	commands.registerCommand(Commands.openFolder, async () => {
+	const openFolder = commands.registerCommand(Commands.openFolder, async () => {
 		const openDialogOptions = {
 			canSelectMany: true,
 			openLabel: 'Add to local playlist',
@@ -70,13 +70,13 @@ function registerCommands() {
 			}
 		});
 	});
-	commands.registerCommand(Commands.deteleTrack, async (itemToDelete: string) => {
+	const deleteTrack = commands.registerCommand(Commands.deteleTrack, async (itemToDelete: string) => {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.localFile);
 		const tracks = fileContent.filter(content => content !== itemToDelete);
 		fileHandler.writeFile(config.localFile, tracks);
 	});
 
-	commands.registerCommand(Commands.favTrack, async (trackFav: string | Track) => {
+	const favTrack = commands.registerCommand(Commands.favTrack, async (trackFav: string | Track) => {
 		const track: string = typeof trackFav === 'string' ? trackFav : trackFav.url;
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
 		if (!fileContent.includes(track)) {
@@ -87,13 +87,13 @@ function registerCommands() {
 		}
 	});
 
-	commands.registerCommand(Commands.unFavTrack, async (track: string) => {
+	const unFavTrack = commands.registerCommand(Commands.unFavTrack, async (track: string) => {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
 		const tracks = fileContent.filter(content => content !== track);
 		fileHandler.writeFile(config.favFile, tracks);
 	});
 
-	commands.registerCommand(Commands.viewTrackDetail, (track: Track) => {
+	const viewTrackDetail = commands.registerCommand(Commands.viewTrackDetail, (track: Track) => {
 		console.log('track ==>', track);
 		// const uri = Uri.parse("ok:" + track.title);
 		// Create and show panel
@@ -106,11 +106,13 @@ function registerCommands() {
 				ViewColumn.One,
 				{}
 			);
-	
+
 			// And set its HTML content
 			panel.webview.html = getWebviewContent(track, result);
 		});
 	});
+
+	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia);
 }
 
 async function initializer() {

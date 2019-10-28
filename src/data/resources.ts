@@ -41,11 +41,11 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
 
             console.log('tracks ==>', tracks);
             break;
-        case "Podcast":
+        case "Podcast":            
             res = await fetch("https://listen-api.listennotes.com/api/v2/search?type=episode&q=" + encodeURIComponent(name), {
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-ListenAPI-Key': process.env.LISTENNOTE_KEY || 'Your api key'
+                    'X-ListenAPI-Key': "dca4aaf4712e4faa81315fbd3aa18bd2"
                 }
             });
             let resJson = await res.json();
