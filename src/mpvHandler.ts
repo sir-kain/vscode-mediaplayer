@@ -1,4 +1,4 @@
-import * as mpvAPI from "node-mpv";
+import * as mpvAPI from "node-mpv-km";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
 const TIMETOJUMP: number = 20;
