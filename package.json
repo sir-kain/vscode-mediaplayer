@@ -5,12 +5,12 @@
 	"publisher": "sirkane",
 	"version": "1.0.1",
 	"author": {
-    "name": "sir_kane"
+		"name": "sir_kane"
 	},
 	"galleryBanner": {
-    "color": "#373436",
-    "theme": "dark"
-  },
+		"color": "#373436",
+		"theme": "dark"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sir-kain/vscode-mediaplayer.git"
@@ -31,8 +31,8 @@
 	],
 	"icon": "assets/vscmpicon.png",
 	"bugs": {
-    "url": "https://github.com/sir-kain/vscode-mediaplayer/issues",
-    "email": "ahmadouwalyndiaye@gmail.com"
+		"url": "https://github.com/sir-kain/vscode-mediaplayer/issues",
+		"email": "ahmadouwalyndiaye@gmail.com"
 	},
 	"homepage": "https://github.com/sir-kain/vscode-mediaplayer/blob/master/README.md",
 	"activationEvents": [
