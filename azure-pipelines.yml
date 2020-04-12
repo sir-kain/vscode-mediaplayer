@@ -5,8 +5,12 @@ strategy:
   matrix:
     linux:
       imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.13'
+    mac_node_10:
+      imageName: Hosted macOS
+      node_version: 10.x
+    mac_node_12:
+      imageName: Hosted macOS
+      node_version: 12.x
     windows:
       imageName: 'vs2017-win2016'
 
