@@ -2,7 +2,7 @@
 
 ![VSCMP Icon](./assets/screen.png 'Vscmp')
 
-An extension that allows you to code by listning sounds inside Vscode
+An extension that allows you to code by listening sounds inside Vscode
 PODCAST
 YOUTUBE
 
@@ -11,7 +11,9 @@ YOUTUBE
 [![Rating](https://vsmarketplacebadge.apphb.com/rating-short/sirkane.vscode-mediaplayer.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=sirkane.vscode-mediaplayer)
 
 # Requirements
-This extension requires **mpv** and **youtube-dl** to be installed on your system to work.
+This extension requires [mpv](https://mpv.io) and [youtube-dl](https://youtube-dl.org) to be installed on your system to work.
+
+**youtube-dl** is only required if you want to stream music from *YouTube*.
 
 
 #### OS X
@@ -31,8 +33,6 @@ sudo apt-get install mpv youtube-dl
 Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://youtube-dl.org) and follow the install instructions.
 
 
-**youtube-dl** is only required if you want to stream music from *YouTube*.
-
 
 ## Install
 
@@ -43,12 +43,12 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 
 ## Features
 
-- Search on youtube and [listennotes](https://www.listennotes.com/)
+- Search on Youtube and [Listennotes](https://www.listennotes.com/)
 - Upload your local media
-- Load the playlist (Plat, Resume, Next, Prev, ...)
+- Load the playlist (Play, Resume, Next, Prev, ...)
 - View the track description
-- Add a track to your favorites
-- Delete a track
+- Add track to your favorites
+- Delete track to your favorites
 
 ## Resources
 
@@ -59,14 +59,15 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 
 ## Release Notes
 
+### 1.0.1
+
+- Improve README.md file
+- Remove Deezer option on the QuickPick modal
+
 ### 1.0.0
 
 Initial release
 
-### 1.0.1
-
-- Improve README.md file
-- Remove Deezer option on the quickpick modal
 -----------------------------------------------------------------------------------------------------------
 
 **Enjoy!**

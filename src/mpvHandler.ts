@@ -1,4 +1,4 @@
-import * as mpvAPI from "node-mpv";
+import * as mpvAPI from "node-mpv-km";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
 const TIMETOJUMP: number = 20;
@@ -10,7 +10,7 @@ export async function play(url: string) {
 		await mpv.load(url);
 	}
 	catch (error) {
-		console.log("err ", error);
+		console.error("play ", error);
 	}
 }
 
@@ -19,7 +19,7 @@ export async function next() {
 		await mpv.next("weak");
 	}
 	catch (error) {
-		console.log("next ", error);
+		console.error("next ", error);
 	}
 }
 
@@ -28,7 +28,7 @@ export async function prev() {
 		await mpv.prev("weak");
 	}
 	catch (error) {
-		console.log("prev ", error);
+		console.error("prev ", error);
 	}
 }
 
@@ -37,7 +37,7 @@ export async function pause() {
 		await mpv.pause();
 	}
 	catch (error) {
-		console.log("pause ", error);
+		console.error("pause ", error);
 	}
 }
 
@@ -51,7 +51,7 @@ export async function jumpToPrev() {
 		}
 	}
 	catch (error) {
-		console.log("jumpToPrev ", error);
+		console.error("jumpToPrev ", error);
 	}
 }
 
@@ -61,7 +61,7 @@ export async function jumpToNext() {
 		await mpv.goToPosition(currentPosition + TIMETOJUMP);
 	}
 	catch (error) {
-		console.log("jumpToNext ", error);
+		console.error("jumpToNext ", error);
 	}
 }
 
@@ -70,7 +70,7 @@ export async function resume() {
 		await mpv.resume();
 	}
 	catch (error) {
-		console.log("resume ", error);
+		console.error("resume ", error);
 	}
 }
 
@@ -81,7 +81,7 @@ export async function getTimePosition(): Promise<string> {
 		timePos = new Date(parseInt(timePosInSecond) * 1000).toISOString().substr(11, 8);
 	}
 	catch (error) {
-		console.log("getTimePosition ", error);
+		console.error("getTimePosition ", error);
 	}
 	return timePos;
 }
@@ -105,7 +105,7 @@ async function quitMpvNeeded(): Promise<void> {
 			await mpv.quit();
 		}
 	} catch (error) {
-		console.log('error ==>', error);
+		console.error('error ==>', error);
 	}
 }
 

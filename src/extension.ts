@@ -1,5 +1,5 @@
 import { ExtensionContext, commands, window, Uri, StatusBarAlignment, workspace, ViewColumn } from "vscode";
-import * as ressources from "./data/resources";
+import * as resources from "./data/resources";
 import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
@@ -158,7 +158,7 @@ function updateTreeView(view: string, tracks: string[]) {
 function updateSearchTreeView(view: string, provider: string, keyword: string) {
 	window.registerTreeDataProvider(view, {
 		async getChildren() {
-			const mediaList = await ressources.searchTracks(provider, keyword);
+			const mediaList = await resources.searchTracks(provider, keyword);
 			if (!mediaList || !mediaList.length) {
 				window.showInformationMessage(`No results matched "${keyword}"`);
 				return;
@@ -198,7 +198,7 @@ function arrayUnique(array: string[]) {
 	return a;
 }
 
-const button = {
+const buttons = {
 	prevJumpTo: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	prev: window.createStatusBarItem(StatusBarAlignment.Left, 100),
 	togglePlay: window.createStatusBarItem(StatusBarAlignment.Left, 100),
@@ -207,97 +207,97 @@ const button = {
 };
 
 function stoppedState() {
-	button.prev.text = '';
-	button.prev.hide();
-	button.togglePlay.text = '';
-	button.togglePlay.hide();
-	button.next.text = '';
-	button.next.hide();
-	button.nextJumpTo.text = '';
-	button.nextJumpTo.hide();
-	button.prevJumpTo.text = '';
-	button.prevJumpTo.hide();
+	buttons.prev.text = '';
+	buttons.prev.hide();
+	buttons.togglePlay.text = '';
+	buttons.togglePlay.hide();
+	buttons.next.text = '';
+	buttons.next.hide();
+	buttons.nextJumpTo.text = '';
+	buttons.nextJumpTo.hide();
+	buttons.prevJumpTo.text = '';
+	buttons.prevJumpTo.hide();
 }
 
 function runningState(timePos: string) {
-	button.prevJumpTo.text = `$(chevron-left)`;
-	button.prevJumpTo.tooltip = "Back to";
-	button.prevJumpTo.command = "vsmp.prevTo";
-	button.prevJumpTo.show();
+	buttons.prevJumpTo.text = `$(chevron-left)`;
+	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.command = "vsmp.prevTo";
+	buttons.prevJumpTo.show();
 
-	button.prev.text = `$(triangle-left)`;
-	button.prev.tooltip = "Prev";
-	button.prev.command = "vsmp.prev";
-	button.prev.show();
+	buttons.prev.text = `$(triangle-left)`;
+	buttons.prev.tooltip = "Prev";
+	buttons.prev.command = "vsmp.prev";
+	buttons.prev.show();
 
-	button.togglePlay.text = `$(dash) ${timePos}`;
-	button.togglePlay.tooltip = "Pause";
-	button.togglePlay.command = "vsmp.pause";
-	button.togglePlay.show();
+	buttons.togglePlay.text = `$(dash) ${timePos}`;
+	buttons.togglePlay.tooltip = "Pause";
+	buttons.togglePlay.command = "vsmp.pause";
+	buttons.togglePlay.show();
 
-	button.next.text = `$(triangle-right)`;
-	button.next.tooltip = "Next";
-	button.next.command = "vsmp.next";
-	button.next.show();
+	buttons.next.text = `$(triangle-right)`;
+	buttons.next.tooltip = "Next";
+	buttons.next.command = "vsmp.next";
+	buttons.next.show();
 
-	button.nextJumpTo.text = `$(chevron-right)`;
-	button.nextJumpTo.tooltip = "Move to";
-	button.nextJumpTo.command = "vsmp.nextTo";
-	button.nextJumpTo.show();
+	buttons.nextJumpTo.text = `$(chevron-right)`;
+	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.command = "vsmp.nextTo";
+	buttons.nextJumpTo.show();
 }
 
 function loadingState() {
-	button.prevJumpTo.text = `$(chevron-left)`;
-	button.prevJumpTo.tooltip = "Back to";
-	button.prevJumpTo.command = "";
-	button.prevJumpTo.show();
+	buttons.prevJumpTo.text = `$(chevron-left)`;
+	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.show();
 
-	button.prev.text = `$(triangle-left)`;
-	button.prev.tooltip = "Prev";
-	button.prev.command = "";
-	button.prev.show();
+	buttons.prev.text = `$(triangle-left)`;
+	buttons.prev.tooltip = "Prev";
+	buttons.prev.command = "";
+	buttons.prev.show();
 
-	button.togglePlay.text = `$(sync~spin)Loading ...`;
-	button.togglePlay.tooltip = "Loading";
-	button.togglePlay.command = "";
-	button.togglePlay.show();
+	buttons.togglePlay.text = `$(sync~spin)Loading ...`;
+	buttons.togglePlay.tooltip = "Loading";
+	buttons.togglePlay.command = "";
+	buttons.togglePlay.show();
 
-	button.next.text = `$(triangle-right)`;
-	button.next.tooltip = "Next";
-	button.next.command = "";
-	button.next.show();
+	buttons.next.text = `$(triangle-right)`;
+	buttons.next.tooltip = "Next";
+	buttons.next.command = "";
+	buttons.next.show();
 
-	button.nextJumpTo.text = `$(chevron-right)`;
-	button.nextJumpTo.tooltip = "Move to";
-	button.nextJumpTo.command = "";
-	button.nextJumpTo.show();
+	buttons.nextJumpTo.text = `$(chevron-right)`;
+	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.show();
 }
 
 function pausedState(timePos: string) {
-	button.prev.text = `$(triangle-left)`;
-	button.prev.tooltip = "Prev";
-	button.prev.command = "";
-	button.prev.show();
+	buttons.prev.text = `$(triangle-left)`;
+	buttons.prev.tooltip = "Prev";
+	buttons.prev.command = "";
+	buttons.prev.show();
 
-	button.prevJumpTo.text = `$(chevron-left)`;
-	button.prevJumpTo.tooltip = "Back to";
-	button.prevJumpTo.command = "";
-	button.prevJumpTo.show();
+	buttons.prevJumpTo.text = `$(chevron-left)`;
+	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.show();
 
-	button.togglePlay.text = `$(play) ${timePos}`;
-	button.togglePlay.tooltip = "Resume";
-	button.togglePlay.command = "vsmp.resume";
-	button.togglePlay.show();
+	buttons.togglePlay.text = `$(play) ${timePos}`;
+	buttons.togglePlay.tooltip = "Resume";
+	buttons.togglePlay.command = "vsmp.resume";
+	buttons.togglePlay.show();
 
-	button.nextJumpTo.text = `$(chevron-right)`;
-	button.nextJumpTo.tooltip = "Move to";
-	button.nextJumpTo.command = "";
-	button.nextJumpTo.show();
+	buttons.nextJumpTo.text = `$(chevron-right)`;
+	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.show();
 
-	button.next.text = `$(triangle-right)`;
-	button.next.tooltip = "Next";
-	button.next.command = "";
-	button.next.show();
+	buttons.next.text = `$(triangle-right)`;
+	buttons.next.tooltip = "Next";
+	buttons.next.command = "";
+	buttons.next.show();
 }
 
 // mpvHandler.on('statuschange', (status: any) => {
@@ -349,10 +349,10 @@ function getWebviewContent(track: Track, result: any) {
 	<body>
 			<div>
 				<h2> ${track.title} </h2>
-				<img src="${track.icon}" width="200" />
-				<p>
+				<img src="${track.icon}" width="200" stype="margin: 0 auto"/>
+				<div>
 					${result}
-				</p>
+				</div>
 			</div>
 	</body>
 	</html>`;
