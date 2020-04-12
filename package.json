@@ -1,9 +1,9 @@
 {
 	"name": "vscode-mediaplayer",
 	"displayName": "Mediaplayer",
-	"description": "Mediaplayer extention for VS Code",
+	"description": "Mediaplayer extension for VS Code",
 	"publisher": "sirkane",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"author": {
 		"name": "sir_kane"
 	},
@@ -38,7 +38,7 @@
 	"activationEvents": [
 		"*"
 	],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{

@@ -43,7 +43,7 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 
 ## Features
 
-- Search on Youtube and [Listennotes](https://www.listennotes.com/)
+- Search on [Youtube](https://www.youtube.com/) and [Listennotes](https://www.listennotes.com/)
 - Upload your local media
 - Load the playlist (Play, Resume, Next, Prev, ...)
 - View the track description
@@ -52,21 +52,10 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 
 ## Resources
 
-- [Get VS Code](https://code.visualstudio.com/?wt.mc_id=peacock-github-sir-kain)
-- [Create your first VS Code extension](https://code.visualstudio.com/api/get-started/your-first-extension?wt.mc_id=peacock-github-sir-kain)
-- [VS Code Extension API](https://code.visualstudio.com/api/references/vscode-api?wt.mc_id=peacock-github-sir-kain)
-- [Learn how to add WebPack bundles to your favorite extensions](https://code.visualstudio.com/updates/v1_32#_bundling-extensions-with-webpack?wt.mc_id=peacock-github-sir-kain)
-
-## Release Notes
-
-### 1.0.1
-
-- Improve README.md file
-- Remove Deezer option on the QuickPick modal
-
-### 1.0.0
-
-Initial release
+- [Get VS Code](https://code.visualstudio.com/)
+- [Create your first VS Code extension](https://code.visualstudio.com/api/get-started/your-first-extension)
+- [VS Code Extension API](https://code.visualstudio.com/api/references/vscode-api)
+- [Learn how to add WebPack bundles to your favorite extensions](https://code.visualstudio.com/api/working-with-extensions/bundling-extension#using-webpack)
 
 -----------------------------------------------------------------------------------------------------------
 
