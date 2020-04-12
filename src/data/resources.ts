@@ -3,7 +3,7 @@ import * as ENV from "dotenv";
 ENV.config();
 import { Track } from './models/Track';
 import * as YouTube from "simple-youtube-api";
-const youtube = new YouTube('AIzaSyC3URt50QfVuOAxJvls1CcqXs-rGLbHf88');
+const youtube = new YouTube('AIzaSyAJ_tLRbLFzmH4sChaPRBCiH3c5a3AEZdE');
 
 export async function searchTracks(provider: string, name: string): Promise<Track[]> {
     let res = new Response();
@@ -28,7 +28,7 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
             });
             break;
         case "YouTube":
-            tracks = await youtube.searchVideos(name, 20);
+            tracks = await youtube.searchVideos(name, 20).catch((err: any )=> console.log('err ==>', err));
             console.log(tracks);
             tracks = tracks.map((data: any) => {
                 return {
