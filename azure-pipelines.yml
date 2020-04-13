@@ -1,16 +1,13 @@
 trigger:
-- master
+  branches:
+    include: ['*']
+  tags:
+    include: ['*']
 
 strategy:
   matrix:
     linux:
       imageName: 'ubuntu-16.04'
-    mac_node_10:
-      imageName: Hosted macOS
-      node_version: 10.x
-    mac_node_12:
-      imageName: Hosted macOS
-      node_version: 12.x
     windows:
       imageName: 'vs2017-win2016'
 
@@ -38,5 +35,12 @@ steps:
     echo ">>> Run sample integration test"
     yarn && yarn compile && yarn test
   displayName: Run Tests
+
+- bash: |
+    echo ">>> Publish"
+    yarn deploy -p $(VSCODE_MARKETPLACE_TOKEN)
+  displayName: Publish
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['Agent.OS'], 'Linux'))
+  
   env:
     DISPLAY: ':99.0'
