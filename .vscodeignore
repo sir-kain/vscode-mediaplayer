@@ -3,6 +3,7 @@
 **/*.map
 **/*.ts
 .vscode
+.vscode-test
 node_modules
 out/
 src/
