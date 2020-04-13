@@ -8,7 +8,7 @@
 		"name": "sir_kane"
 	},
 	"galleryBanner": {
-		"color": "#373436",
+		"color": "#ffd700",
 		"theme": "dark"
 	},
 	"repository": {
@@ -268,5 +268,6 @@
 		"node-fetch": "^2.6.0",
 		"node-mpv-km": "^2.0.0",
 		"simple-youtube-api": "^5.1.1"
-	}
+	},
+	"license": "SEE LICENSE IN LICENSE file"
 }
