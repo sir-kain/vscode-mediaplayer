@@ -1,3 +1,4 @@
+.github/**
 .gitignore
 **/tslint.json
 **/*.map
@@ -7,5 +8,8 @@
 node_modules
 out/
 src/
+types/
 tsconfig.json
 webpack.config.js
+.env
+.env-example
