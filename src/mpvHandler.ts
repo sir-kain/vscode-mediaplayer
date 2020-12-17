@@ -1,4 +1,4 @@
-import * as mpvAPI from "node-mpv-km";
+import * as mpvAPI from "node-mpv";
 import * as config from "./data/config";
 const Mpv = new mpvAPI({ "audio_only": true, "auto_restart": true });
 const TIMETOJUMP: number = 20;
@@ -16,7 +16,7 @@ export async function play(url: string) {
 
 export async function next() {
 	try {
-		await mpv.next("weak");
+		await mpv.next("force");
 	}
 	catch (error) {
 		console.error("next ", error);
@@ -25,7 +25,7 @@ export async function next() {
 
 export async function prev() {
 	try {
-		await mpv.prev("weak");
+		await mpv.prev("force");
 	}
 	catch (error) {
 		console.error("prev ", error);
@@ -91,21 +91,21 @@ export async function loadPlaylist(filePath: string) {
 		if (!filePath) { return; }
 		await quitMpvNeeded();
 		await mpv.start();
-		await mpv.loadPlaylist(filePath, "append");
+		await mpv.loadPlaylist(filePath);
 	}
 	catch (error) {
-		console.error("err ", error);
+		console.error("err loadPlaylist ==>", error);
 	}
 }
 
-async function quitMpvNeeded(): Promise<void> {
+export async function quitMpvNeeded(): Promise<void> {
 	try {
 		const mpvIsRunning = await mpv.isRunning();
 		if (mpvIsRunning) {
 			await mpv.quit();
 		}
 	} catch (error) {
-		console.error('error ==>', error);
+		console.error('error quitMpvNeeded ==>', error);
 	}
 }
 
