@@ -1,9 +1,5 @@
 # Change Log
 
-All notable changes to the "vscode-mediaplayer" extension will be documented in this file.
+## v1.6.1
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Fixed load podcast playlist
