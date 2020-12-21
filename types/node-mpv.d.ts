@@ -113,7 +113,7 @@ declare class node_mpv {
 
     next(mode: any): any;
 
-    observeProperty(property: any, id: any): void;
+    observeProperty(property: any): void;
 
     off(type: any, listener: any): any;
 

@@ -161,7 +161,7 @@ function updateSearchTreeView(view: string, provider: string, keyword: string) {
 	window.registerTreeDataProvider(view, {
 		async getChildren() {
 			const mediaList = await resources.searchTracks(provider, keyword);
-			if (!mediaList || !mediaList.length) {
+			if (!mediaList || mediaList.length === 0) {
 				window.showInformationMessage(`No results matched "${keyword}"`);
 				return;
 			}
@@ -251,39 +251,39 @@ function runningState(timePos: string) {
 function loadingState() {
 	buttons.prevJumpTo.text = `$(chevron-left)`;
 	buttons.prevJumpTo.tooltip = "Back to";
-	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
 	buttons.prev.text = `$(triangle-left)`;
 	buttons.prev.tooltip = "Prev";
-	buttons.prev.command = "";
+	buttons.prev.command = undefined;
 	buttons.prev.show();
 
 	buttons.togglePlay.text = `$(sync~spin)Loading ...`;
 	buttons.togglePlay.tooltip = "Loading";
-	buttons.togglePlay.command = "";
+	buttons.togglePlay.command = undefined;
 	buttons.togglePlay.show();
 
 	buttons.next.text = `$(triangle-right)`;
 	buttons.next.tooltip = "Next";
-	buttons.next.command = "";
+	buttons.next.command = undefined;
 	buttons.next.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
 	buttons.nextJumpTo.tooltip = "Move to";
-	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 }
 
 function pausedState(timePos: string) {
 	buttons.prev.text = `$(triangle-left)`;
 	buttons.prev.tooltip = "Prev";
-	buttons.prev.command = "";
+	buttons.prev.command = undefined;
 	buttons.prev.show();
 
 	buttons.prevJumpTo.text = `$(chevron-left)`;
 	buttons.prevJumpTo.tooltip = "Back to";
-	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
 	buttons.togglePlay.text = `$(play) ${timePos}`;
@@ -293,18 +293,15 @@ function pausedState(timePos: string) {
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
 	buttons.nextJumpTo.tooltip = "Move to";
-	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 
 	buttons.next.text = `$(triangle-right)`;
 	buttons.next.tooltip = "Next";
-	buttons.next.command = "";
+	buttons.next.command = undefined;
 	buttons.next.show();
 }
 
-// mpvHandler.on('statuschange', (status: any) => {
-// 	console.log(status);
-// });
 
 mpv.on('started', async () => {
 	console.log("started");
@@ -318,20 +315,18 @@ mpv.on('stopped', () => {
 });
 
 mpv.on('paused', async () => {
-	console.log('paused ==>');
 	const timePos = await getTimePositionFormated();
 	pausedState(timePos);
 });
 
 mpv.on('resumed', async () => {
-	console.log('resumed ==>');
 	const timePos = await getTimePositionFormated();
 	runningState(timePos);
 });
 
 mpv.on('timeposition', async (timePosInSecond: number) => {
 	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
-	console.log('timePos >', timePos);
+	// console.log('timePos >', timePos);
 	runningState(timePos);
 	// do we need 'resumed' event ?
 });
