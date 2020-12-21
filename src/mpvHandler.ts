@@ -98,6 +98,34 @@ export async function loadPlaylist(filePath: string) {
 	}
 }
 
+export async function getPlaylistPosition() {
+	try {
+		await mpv.getPlaylistPosition();
+	}
+	catch (error) {
+		console.error("err getPlaylistPosition ==>", error);
+	}
+}
+
+export async function getTitle() {
+	try {
+		await mpv.getTitle();
+	}
+	catch (error) {
+		console.error("err getTitle ==>", error);
+	}
+}
+
+export async function observeProperty(property: String) {
+	try {
+		await mpv.observeProperty(property);
+	}
+	catch (error) {
+		console.error("err observeProperty property==>", error);
+	}
+}
+
+
 export async function quitMpvNeeded(): Promise<void> {
 	try {
 		const mpvIsRunning = await mpv.isRunning();
