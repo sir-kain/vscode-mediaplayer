@@ -104,6 +104,8 @@ declare class node_mpv {
     loadPlaylist(playlist: any, mode?: any): any;
 
     loop(times: any): any;
+    
+    loopPlaylist(times: any): any;
 
     messageHandler(message: any): void;
 
@@ -111,7 +113,7 @@ declare class node_mpv {
 
     mute(): any;
 
-    next(mode: any): any;
+    next(mode?: String): any;
 
     observeProperty(property: any): void;
 
@@ -133,7 +135,7 @@ declare class node_mpv {
 
     prependOnceListener(type: any, listener: any): any;
 
-    prev(mode: any): any;
+    prev(mode?: String): any;
 
     quit(): void;
 

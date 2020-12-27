@@ -30,6 +30,7 @@ export async function resumeHandler() {
 
 export async function loadPlaylistHandler(filePath: string) {
    await mpv.loadPlaylist(filePath);
+   await mpv.loopPlaylist('inf');
 }
 
 export async function openFolderHandler() {
