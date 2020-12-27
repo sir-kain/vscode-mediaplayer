@@ -1,6 +1,6 @@
 import { ExtensionContext, commands, window, Uri, StatusBarAlignment, workspace, ViewColumn } from "vscode";
 import * as resources from "./data/resources";
-import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated, quitMpv } from "./commands";
+import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormatted, quitMpv } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
@@ -223,7 +223,7 @@ function stoppedState() {
 
 function runningState(timePos: string) {
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.tooltip = "-20s";
 	buttons.prevJumpTo.command = "vsmp.prevTo";
 	buttons.prevJumpTo.show();
 
@@ -243,14 +243,14 @@ function runningState(timePos: string) {
 	buttons.next.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.tooltip = "+20s";
 	buttons.nextJumpTo.command = "vsmp.nextTo";
 	buttons.nextJumpTo.show();
 }
 
 function loadingState() {
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.tooltip = "-20s";
 	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
@@ -259,7 +259,7 @@ function loadingState() {
 	buttons.prev.command = undefined;
 	buttons.prev.show();
 
-	buttons.togglePlay.text = `$(sync~spin)Loading ...`;
+	buttons.togglePlay.text = `$(sync~spin)Loading $(ellipsis)`;
 	buttons.togglePlay.tooltip = "Loading";
 	buttons.togglePlay.command = undefined;
 	buttons.togglePlay.show();
@@ -270,7 +270,7 @@ function loadingState() {
 	buttons.next.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.tooltip = "+20s";
 	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 }
@@ -282,7 +282,7 @@ function pausedState(timePos: string) {
 	buttons.prev.show();
 
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.tooltip = "-20s";
 	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
@@ -292,7 +292,7 @@ function pausedState(timePos: string) {
 	buttons.togglePlay.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.tooltip = "+20s";
 	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 
@@ -304,8 +304,9 @@ function pausedState(timePos: string) {
 
 
 mpv.on('started', async () => {
-	console.log("started");
-	let timePos = await getTimePositionFormated();
+	console.log('await getPlaylistPosition() ==>', await mpv.getPlaylistPosition());
+	console.log('await getTitle() ==>', await mpv.getTitle());
+	let timePos = await getTimePositionFormatted();
 	runningState(timePos);
 });
 
@@ -315,18 +316,17 @@ mpv.on('stopped', () => {
 });
 
 mpv.on('paused', async () => {
-	const timePos = await getTimePositionFormated();
+	const timePos = await getTimePositionFormatted();
 	pausedState(timePos);
 });
 
 mpv.on('resumed', async () => {
-	const timePos = await getTimePositionFormated();
+	const timePos = await getTimePositionFormatted();
 	runningState(timePos);
 });
 
 mpv.on('timeposition', async (timePosInSecond: number) => {
 	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
-	// console.log('timePos >', timePos);
 	runningState(timePos);
 	// do we need 'resumed' event ?
 });
