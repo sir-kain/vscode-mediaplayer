@@ -16,7 +16,7 @@ export async function play(url: string) {
 
 export async function next() {
 	try {
-		await mpv.next("force");
+		await mpv.next();
 	}
 	catch (error) {
 		console.error("next ", error);
@@ -25,7 +25,7 @@ export async function next() {
 
 export async function prev() {
 	try {
-		await mpv.prev("force");
+		await mpv.prev();
 	}
 	catch (error) {
 		console.error("prev ", error);
@@ -95,6 +95,15 @@ export async function loadPlaylist(filePath: string) {
 	}
 	catch (error) {
 		console.error("err loadPlaylist ==>", error);
+	}
+}
+
+export async function loopPlaylist(times: any) {
+	try {
+		await mpv.loopPlaylist(times);
+	}
+	catch (error) {
+		console.error("err loopPlaylist ==>", error);
 	}
 }
 
