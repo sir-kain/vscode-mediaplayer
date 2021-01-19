@@ -3,4 +3,5 @@ export interface Track {
     icon: string | null;
     url: string;
     description: string | null;
+    channel: string;
 }

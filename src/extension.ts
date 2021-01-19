@@ -7,6 +7,7 @@ import { Track } from './data/models/Track';
 import * as config from "./data/config";
 import { watchFile } from "fs";
 import { mpv } from "./mpvHandler";
+import { SearchList } from "./views/searchList";
 
 export function activate(context: ExtensionContext) {
 	initializer();
@@ -158,34 +159,7 @@ function updateTreeView(view: string, tracks: string[]) {
 }
 
 function updateSearchTreeView(view: string, provider: string, keyword: string) {
-	window.registerTreeDataProvider(view, {
-		async getChildren() {
-			const mediaList = await resources.searchTracks(provider, keyword);
-			if (!mediaList || mediaList.length === 0) {
-				window.showInformationMessage(`No results matched "${keyword}"`);
-				return;
-			}
-			// Populate the search file, will be used the playlist for search
-			let tracks: string[] = [];
-			mediaList.map((track: Track) => tracks.push(track.url));
-			fileHandler.writeFile(config.searchFile, tracks);
-			return mediaList;
-		},
-		getTreeItem(track: Track) {
-			return {
-				tooltip: `${provider}: ${track.title}`,
-				label: track.title,
-				iconPath: track.icon ? Uri.parse(track.icon) : '',
-				command: {
-					command: Commands.play,
-					title: 'play',
-					arguments: [
-						track.url
-					]
-				}
-			};
-		}
-	});
+	window.registerTreeDataProvider(view, new SearchList(provider, keyword));
 }
 
 function arrayUnique(array: string[]) {
