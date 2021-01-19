@@ -239,7 +239,13 @@
 					"group": "inline"
 				}
 			]
-		}
+		},
+		"viewsWelcome": [
+			{
+				"view": "vsmp.mediaList",
+				"contents": "Your search list is empty. \n[Start searching](command:vsmp.searchMedia)"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
