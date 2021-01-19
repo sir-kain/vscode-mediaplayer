@@ -8,14 +8,7 @@ import { Commands } from '../data/constants';
 
 export class SearchList implements vscode.TreeDataProvider<TrackItem | ChannelItem> {
 
-	private _onDidChangeTreeData: vscode.EventEmitter<Track | undefined | void> = new vscode.EventEmitter<Track | undefined | void>();
-	// readonly onDidChangeTreeData: vscode.Event<TrackItem | undefined | void> = this._onDidChangeTreeData.event;
-
 	constructor(private provider: string, private keyword: string) { }
-
-	refresh(): void {
-		this._onDidChangeTreeData.fire();
-	}
 
 	getTreeItem(element: TrackItem | ChannelItem): vscode.TreeItem {
 		return element;
