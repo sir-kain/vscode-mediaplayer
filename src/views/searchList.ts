@@ -8,13 +8,17 @@ import { Commands } from '../data/constants';
 
 export class SearchList implements vscode.TreeDataProvider<TrackItem | ChannelItem> {
 
-	constructor(private provider: string, private keyword: string) { }
+	constructor(private provider?: string, private keyword?: string, private file?: string[]) { }
 
 	getTreeItem(element: TrackItem | ChannelItem): vscode.TreeItem {
 		return element;
 	}
 
 	async getChildren(element: any): Promise<TrackItem[] | ChannelItem[]> {
+		if (!this.provider || !this.keyword) {
+			console.log('element ==>', element);
+			return Promise.resolve([]);
+		}
 		if (element && element.channel) {
 			const items = new ChannelItem(element.channel, this.provider)
 			return Promise.resolve([items]);
@@ -58,7 +62,7 @@ export class TrackItem extends vscode.TreeItem {
 
 	iconPath = this.thumbnail ? vscode.Uri.parse(this.thumbnail) : '';
 
-	contextValue = 'track';
+	contextValue = 'search';
 }
 
 export class ChannelItem extends vscode.TreeItem {
@@ -78,4 +82,18 @@ export class ChannelItem extends vscode.TreeItem {
 	// iconPath = path.join(__filename, '..', '..', '..', 'assets', `${this.provider.toLowerCase()}.png`);
 
 	contextValue = 'channel';
+}
+
+export class UrlItem extends vscode.TreeItem {
+
+	constructor(
+		public readonly label: string,
+		public readonly command: vscode.Command,
+	) {
+		super(label, vscode.TreeItemCollapsibleState.None);
+	}
+
+	// iconPath = path.join(__filename, '..', '..', '..', 'assets', `${this.provider.toLowerCase()}.png`);
+
+	contextValue = 'url';
 }
