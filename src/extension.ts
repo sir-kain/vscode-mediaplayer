@@ -136,26 +136,7 @@ watchFile(config.favFile, async (curr, prev) => {
 });
 
 function updateTreeView(view: string, tracks: string[]) {
-	window.registerTreeDataProvider(view, {
-		getChildren() {
-			return tracks;
-		},
-		getTreeItem(url: string) {
-			let title = url.split("/").pop();
-			return {
-				// tooltip: `: ${track.title}`,
-				label: title,
-				// iconPath: track.icon ? Uri.parse(track.icon) : '',
-				command: {
-					command: "vsmp.play",
-					title: 'play',
-					arguments: [
-						url
-					]
-				}
-			};
-		}
-	});
+	window.registerTreeDataProvider(view, new SearchList(undefined, undefined, tracks));
 }
 
 function updateSearchTreeView(view: string, provider: string, keyword: string) {

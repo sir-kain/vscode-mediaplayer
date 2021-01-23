@@ -235,7 +235,7 @@
 				},
 				{
 					"command": "vsmp.viewTrackDetail",
-					"when": "view == vsmp.mediaList",
+					"when": "view == vsmp.mediaList && viewItem == track",
 					"group": "inline"
 				}
 			]
