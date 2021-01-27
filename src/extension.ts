@@ -94,13 +94,9 @@ function registerCommands(context: ExtensionContext) {
 		fileHandler.writeFile(config.favFile, tracks);
 	});
 
-	const viewTrackDetail = commands.registerCommand(Commands.viewTrackDetail, (track: Track) => {
-		console.log('track ==>', track);
-		// const uri = Uri.parse("ok:" + track.title);
-		// Create and show panel
-
+	const viewTrackDetail = commands.registerCommand(Commands.viewTrackDetail, (trackItem: TrackItem) => {
+		const track = trackItem.track;
 		commands.executeCommand('markdown.api.render', track.description).then(result => {
-			console.log(`rendered markdown: ${result}`);
 			const panel = window.createWebviewPanel(
 				'vscmp',
 				track.title,
