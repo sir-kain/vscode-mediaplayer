@@ -3,7 +3,7 @@
 	"displayName": "Mediaplayer",
 	"description": "Mediaplayer extension for VS Code",
 	"publisher": "sirkane",
-	"version": "1.6.2",
+	"version": "1.6.4",
 	"author": {
 		"name": "sir_kane"
 	},
@@ -230,16 +230,22 @@
 				},
 				{
 					"command": "vsmp.pl.favTrack",
-					"when": "view == vsmp.mediaList",
+					"when": "view == vsmp.mediaList && viewItem == search",
 					"group": "inline"
 				},
 				{
 					"command": "vsmp.viewTrackDetail",
-					"when": "view == vsmp.mediaList",
+					"when": "view == vsmp.mediaList && viewItem == search",
 					"group": "inline"
 				}
 			]
-		}
+		},
+		"viewsWelcome": [
+			{
+				"view": "vsmp.mediaList",
+				"contents": "Your search list is empty. \n[Start searching](command:vsmp.searchMedia)"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",

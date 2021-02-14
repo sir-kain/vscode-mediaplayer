@@ -6,7 +6,7 @@ import { Track } from './models/Track';
 
 export async function searchTracks(provider: string, name: string): Promise<Track[]> {
     let res = new Response();
-    let tracks: Array<any> = [];
+    let tracks: Track[] = [];
     switch (provider) {
         case "YouTube":
             try {
@@ -21,7 +21,6 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                     maxResults: 20
                 });
                 if (response.status !== 200) throw response;
-
 
                 tracks = normalizeYoutubeResponse(response.data.items);
             } catch (error) {
@@ -41,7 +40,8 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
                     title: data.title_original,
                     icon: data.thumbnail,
                     url: data.audio,
-                    description: data.description_original
+                    description: data.description_original,
+                    channel: data.podcast.title_original
                 };
             });
             break;
@@ -49,13 +49,14 @@ export async function searchTracks(provider: string, name: string): Promise<Trac
     return tracks;
 }
 
-function normalizeYoutubeResponse(data: any): Array<Track> {
-    return data.map((data: any) => {
+function normalizeYoutubeResponse(data: any): Track[] {
+    return data.map((item: any) => {
         return {
-            title: data.snippet.title,
-            icon: data.snippet.thumbnails.medium.url,
-            url: `https://www.youtube.com/watch?v=${data.id.videoId}`,
-            description: data.snippet.description
+            title: item.snippet.title,
+            icon: item.snippet.thumbnails.medium.url,
+            url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+            description: item.snippet.description,
+            channel: item.snippet.channelTitle
         };
     });
 }

@@ -1,12 +1,13 @@
-import { ExtensionContext, commands, window, Uri, StatusBarAlignment, workspace, ViewColumn } from "vscode";
-import * as resources from "./data/resources";
-import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormated, quitMpv } from "./commands";
+import { ExtensionContext, commands, window, StatusBarAlignment, workspace, ViewColumn } from "vscode";
+import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormatted, quitMpv } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
 import { Track } from './data/models/Track';
 import * as config from "./data/config";
 import { watchFile } from "fs";
 import { mpv } from "./mpvHandler";
+import { SearchList, TrackItem } from "./views/searchList";
+import { LocalList, UrlItem } from "./views/localList";
 
 export function activate(context: ExtensionContext) {
 	initializer();
@@ -18,14 +19,13 @@ export async function deactivate() {
 	await quitMpv();
 }
 
-
 function registerCommands(context: ExtensionContext) {
 	const searchMedia = commands.registerCommand(Commands.searchMedia, async () => {
 		window.showQuickPick(["YouTube", "Podcast"], { placeHolder: 'Pick a provider...' }).then((provider: any) => {
 			if (!provider) { return window.showWarningMessage(`A provider is required ...`); }
 			window.showInputBox({ placeHolder: `Searching on ${provider}` }).then((keyword: any) => {
 				if (!keyword) { return window.showInformationMessage("Please enter keyword!"); }
-				updateSearchTreeView("vsmp.mediaList", provider, keyword);
+				window.registerTreeDataProvider("vsmp.mediaList", new SearchList(provider, keyword));
 			});
 		});
 	});
@@ -78,30 +78,25 @@ function registerCommands(context: ExtensionContext) {
 		fileHandler.writeFile(config.localFile, tracks);
 	});
 
-	const favTrack = commands.registerCommand(Commands.favTrack, async (trackFav: string | Track) => {
-		const track: string = typeof trackFav === 'string' ? trackFav : trackFav.url;
+	const favTrack = commands.registerCommand(Commands.favTrack, async (track: UrlItem | TrackItem) => {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
-		if (!fileContent.includes(track)) {
-			const tracks = fileContent.concat(track);
+		if (!fileContent.includes(track.url)) {
+			const tracks = fileContent.concat(track.url);
 			fileHandler.writeFile(config.favFile, tracks);
 		} else {
-			// already added to fav
+			window.showInformationMessage("Track already added to fav list");
 		}
 	});
 
-	const unFavTrack = commands.registerCommand(Commands.unFavTrack, async (track: string) => {
+	const unFavTrack = commands.registerCommand(Commands.unFavTrack, async (track: UrlItem | TrackItem) => {
 		const fileContent = await fileHandler.getContentFileAsAnArray(config.favFile);
-		const tracks = fileContent.filter(content => content !== track);
+		const tracks = fileContent.filter(content => content !== track.url);
 		fileHandler.writeFile(config.favFile, tracks);
 	});
 
-	const viewTrackDetail = commands.registerCommand(Commands.viewTrackDetail, (track: Track) => {
-		console.log('track ==>', track);
-		// const uri = Uri.parse("ok:" + track.title);
-		// Create and show panel
-
+	const viewTrackDetail = commands.registerCommand(Commands.viewTrackDetail, (trackItem: TrackItem) => {
+		const track = trackItem.track;
 		commands.executeCommand('markdown.api.render', track.description).then(result => {
-			console.log(`rendered markdown: ${result}`);
 			const panel = window.createWebviewPanel(
 				'vscmp',
 				track.title,
@@ -114,78 +109,20 @@ function registerCommands(context: ExtensionContext) {
 		});
 	});
 
-	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia);
+	const stopMediaPlayer = commands.registerCommand(Commands.stop, async () => {
+		await quitMpv();
+		stoppedState();
+	});
+	
+	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia, stopMediaPlayer);
 }
 
 async function initializer() {
 	const localTracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateTreeView("vsmp.openFolder", localTracks);
+	window.registerTreeDataProvider(Commands.openFolder, new LocalList(localTracks));
+
 	const favTracks = await fileHandler.getContentFileAsAnArray(config.favFile);
-	updateTreeView("vsmp.fav", favTracks);
-}
-
-watchFile(config.localFile, async (curr, prev) => {
-	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
-	updateTreeView("vsmp.openFolder", tracks);
-});
-
-watchFile(config.favFile, async (curr, prev) => {
-	const tracks = await fileHandler.getContentFileAsAnArray(config.favFile);
-	updateTreeView("vsmp.fav", tracks);
-});
-
-function updateTreeView(view: string, tracks: string[]) {
-	window.registerTreeDataProvider(view, {
-		getChildren() {
-			return tracks;
-		},
-		getTreeItem(url: string) {
-			let title = url.split("/").pop();
-			return {
-				// tooltip: `: ${track.title}`,
-				label: title,
-				// iconPath: track.icon ? Uri.parse(track.icon) : '',
-				command: {
-					command: "vsmp.play",
-					title: 'play',
-					arguments: [
-						url
-					]
-				}
-			};
-		}
-	});
-}
-
-function updateSearchTreeView(view: string, provider: string, keyword: string) {
-	window.registerTreeDataProvider(view, {
-		async getChildren() {
-			const mediaList = await resources.searchTracks(provider, keyword);
-			if (!mediaList || !mediaList.length) {
-				window.showInformationMessage(`No results matched "${keyword}"`);
-				return;
-			}
-			// Populate the search file, will be used the playlist for search
-			let tracks: string[] = [];
-			mediaList.map((track: Track) => tracks.push(track.url));
-			fileHandler.writeFile(config.searchFile, tracks);
-			return mediaList;
-		},
-		getTreeItem(track: Track) {
-			return {
-				tooltip: `${provider}: ${track.title}`,
-				label: track.title,
-				iconPath: track.icon ? Uri.parse(track.icon) : '',
-				command: {
-					command: Commands.play,
-					title: 'play',
-					arguments: [
-						track.url
-					]
-				}
-			};
-		}
-	});
+	window.registerTreeDataProvider("vsmp.fav", new LocalList(favTracks));
 }
 
 function arrayUnique(array: string[]) {
@@ -223,7 +160,7 @@ function stoppedState() {
 
 function runningState(timePos: string) {
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
+	buttons.prevJumpTo.tooltip = "-20s";
 	buttons.prevJumpTo.command = "vsmp.prevTo";
 	buttons.prevJumpTo.show();
 
@@ -243,47 +180,47 @@ function runningState(timePos: string) {
 	buttons.next.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
+	buttons.nextJumpTo.tooltip = "+20s";
 	buttons.nextJumpTo.command = "vsmp.nextTo";
 	buttons.nextJumpTo.show();
 }
 
 function loadingState() {
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
-	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.tooltip = "-20s";
+	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
 	buttons.prev.text = `$(triangle-left)`;
 	buttons.prev.tooltip = "Prev";
-	buttons.prev.command = "";
+	buttons.prev.command = undefined;
 	buttons.prev.show();
 
-	buttons.togglePlay.text = `$(sync~spin)Loading ...`;
+	buttons.togglePlay.text = `$(sync~spin)Loading $(ellipsis)`;
 	buttons.togglePlay.tooltip = "Loading";
-	buttons.togglePlay.command = "";
+	buttons.togglePlay.command = undefined;
 	buttons.togglePlay.show();
 
 	buttons.next.text = `$(triangle-right)`;
 	buttons.next.tooltip = "Next";
-	buttons.next.command = "";
+	buttons.next.command = undefined;
 	buttons.next.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
-	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.tooltip = "+20s";
+	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 }
 
 function pausedState(timePos: string) {
 	buttons.prev.text = `$(triangle-left)`;
 	buttons.prev.tooltip = "Prev";
-	buttons.prev.command = "";
+	buttons.prev.command = undefined;
 	buttons.prev.show();
 
 	buttons.prevJumpTo.text = `$(chevron-left)`;
-	buttons.prevJumpTo.tooltip = "Back to";
-	buttons.prevJumpTo.command = "";
+	buttons.prevJumpTo.tooltip = "-20s";
+	buttons.prevJumpTo.command = undefined;
 	buttons.prevJumpTo.show();
 
 	buttons.togglePlay.text = `$(play) ${timePos}`;
@@ -292,53 +229,15 @@ function pausedState(timePos: string) {
 	buttons.togglePlay.show();
 
 	buttons.nextJumpTo.text = `$(chevron-right)`;
-	buttons.nextJumpTo.tooltip = "Move to";
-	buttons.nextJumpTo.command = "";
+	buttons.nextJumpTo.tooltip = "+20s";
+	buttons.nextJumpTo.command = undefined;
 	buttons.nextJumpTo.show();
 
 	buttons.next.text = `$(triangle-right)`;
 	buttons.next.tooltip = "Next";
-	buttons.next.command = "";
+	buttons.next.command = undefined;
 	buttons.next.show();
 }
-
-// mpvHandler.on('statuschange', (status: any) => {
-// 	console.log(status);
-// });
-
-mpv.on('started', async () => {
-	console.log("started");
-	let timePos = await getTimePositionFormated();
-	runningState(timePos);
-});
-
-mpv.on('stopped', () => {
-	console.log("stopped");
-	stoppedState();
-});
-
-mpv.on('paused', async () => {
-	console.log('paused ==>');
-	const timePos = await getTimePositionFormated();
-	pausedState(timePos);
-});
-
-mpv.on('resumed', async () => {
-	console.log('resumed ==>');
-	const timePos = await getTimePositionFormated();
-	runningState(timePos);
-});
-
-mpv.on('timeposition', async (timePosInSecond: number) => {
-	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
-	console.log('timePos >', timePos);
-	runningState(timePos);
-	// do we need 'resumed' event ?
-});
-
-mpv.on('crashed', () => {
-	console.log("crached");
-});
 
 function getWebviewContent(track: Track, result: any) {
 	return `<!DOCTYPE html>
@@ -359,3 +258,45 @@ function getWebviewContent(track: Track, result: any) {
 	</body>
 	</html>`;
 }
+
+mpv.on('started', async () => {
+	console.log('await getPlaylistPosition() ==>', await mpv.getPlaylistPosition());
+	console.log('await getTitle() ==>', await mpv.getTitle());
+	let timePos = await getTimePositionFormatted();
+	runningState(timePos);
+});
+
+mpv.on('stopped', () => {
+	console.log("stopped");
+	stoppedState();
+});
+
+mpv.on('paused', async () => {
+	const timePos = await getTimePositionFormatted();
+	pausedState(timePos);
+});
+
+mpv.on('resumed', async () => {
+	const timePos = await getTimePositionFormatted();
+	runningState(timePos);
+});
+
+mpv.on('timeposition', async (timePosInSecond: number) => {
+	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
+	runningState(timePos);
+	// do we need 'resumed' event ?
+});
+
+mpv.on('crashed', () => {
+	console.log("crached");
+});
+
+watchFile(config.localFile, async (curr, prev) => {
+	const tracks = await fileHandler.getContentFileAsAnArray(config.localFile);
+	window.registerTreeDataProvider(Commands.openFolder, new LocalList(tracks));
+});
+
+watchFile(config.favFile, async (curr, prev) => {
+	const tracks = await fileHandler.getContentFileAsAnArray(config.favFile);
+	window.registerTreeDataProvider("vsmp.fav", new LocalList(tracks));
+});

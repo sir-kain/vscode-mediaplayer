@@ -30,6 +30,7 @@ export async function resumeHandler() {
 
 export async function loadPlaylistHandler(filePath: string) {
    await mpv.loadPlaylist(filePath);
+   await mpv.loopPlaylist('inf');
 }
 
 export async function openFolderHandler() {
@@ -42,7 +43,7 @@ export async function quitMpv() {
    await mpv.quitMpvNeeded();
 }
 
-export async function getTimePositionFormated(): Promise<string> {
+export async function getTimePositionFormatted(): Promise<string> {
    const timePos = await mpv.getTimePosition();
    return timePos;
 }
