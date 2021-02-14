@@ -6,6 +6,7 @@ export const Commands = {
   nextTo: "vsmp.nextTo",
   prev: "vsmp.prev",
   resume: "vsmp.resume",
+  stop: "vsmp.stop",
   loadLocalPlaylist: "vsmp.loadLocalPlaylist",
   loadSearchPlaylist: "vsmp.loadSearchPlaylist",
   loadFavPlaylist: "vsmp.loadFavPlaylist",

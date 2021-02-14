@@ -109,7 +109,12 @@ function registerCommands(context: ExtensionContext) {
 		});
 	});
 
-	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia);
+	const stopMediaPlayer = commands.registerCommand(Commands.stop, async () => {
+		await quitMpv();
+		stoppedState();
+	});
+	
+	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia, stopMediaPlayer);
 }
 
 async function initializer() {
