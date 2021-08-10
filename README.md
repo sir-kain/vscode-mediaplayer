@@ -48,7 +48,7 @@ Go to the respective websites [mpv](https://mpv.io) and [youtube-dl](https://you
 - Load the playlist (Play, Resume, Next, Prev, ...)
 - View the track description
 - Add track to your favorites
-- Delete track to your favorites
+- Delete track from your favorites
 
 ## Resources
 
