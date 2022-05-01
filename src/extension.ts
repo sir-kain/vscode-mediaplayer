@@ -1,4 +1,4 @@
-import { ExtensionContext, commands, window, StatusBarAlignment, workspace, ViewColumn } from "vscode";
+import { ExtensionContext, commands, window, StatusBarAlignment, workspace, ViewColumn, Uri } from "vscode";
 import { playHandler, jumpToPrevHandler, jumpToNextHandler, pauseHandler, nextHandler, prevHandler, resumeHandler, loadPlaylistHandler, getTimePositionFormatted, quitMpv } from "./commands";
 import { Commands } from "./data/constants";
 import * as fileHandler from "./data/fileHandler";
@@ -105,7 +105,8 @@ function registerCommands(context: ExtensionContext) {
 			);
 
 			// And set its HTML content
-			panel.webview.html = getWebviewContent(track, result);
+			const video = Uri.file('/home/waly/Downloads/4uwsQSMnXvxKUGLq.mp4')
+			panel.webview.html = getWebviewContent(track, result, video);
 		});
 	});
 
@@ -113,7 +114,7 @@ function registerCommands(context: ExtensionContext) {
 		await quitMpv();
 		stoppedState();
 	});
-	
+
 	context.subscriptions.push(searchMedia, playMedia, pauseMedia, prevtoMedia, nexttoMedia, favTrack, unFavTrack, viewTrackDetail, deleteTrack, openFolder, loadLocalPlaylist, loadFavPlaylist, loadSearchPlaylist, prevMedia, nextMedia, resumeMedia, stopMediaPlayer);
 }
 
@@ -158,7 +159,8 @@ function stoppedState() {
 	buttons.prevJumpTo.hide();
 }
 
-function runningState(timePos: string) {
+async function runningState(timePos: string) {
+	const currentTitle = await mpv.getTitle()
 	buttons.prevJumpTo.text = `$(chevron-left)`;
 	buttons.prevJumpTo.tooltip = "-20s";
 	buttons.prevJumpTo.command = "vsmp.prevTo";
@@ -170,7 +172,7 @@ function runningState(timePos: string) {
 	buttons.prev.show();
 
 	buttons.togglePlay.text = `$(dash) ${timePos}`;
-	buttons.togglePlay.tooltip = "Pause";
+	buttons.togglePlay.tooltip = currentTitle || "Pause";
 	buttons.togglePlay.command = "vsmp.pause";
 	buttons.togglePlay.show();
 
@@ -242,12 +244,12 @@ function pausedState(timePos: string) {
 function getWebviewContent(track: Track, result: any) {
 	return `<!DOCTYPE html>
 	<html lang="en">
-	<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>${track.title}</title>
-	</head>
-	<body>
+		<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>${track.title}</title>
+		</head>
+		<body>
 			<div>
 				<h2> ${track.title} </h2>
 				<img src="${track.icon}" width="200" stype="margin: 0 auto"/>
@@ -255,15 +257,14 @@ function getWebviewContent(track: Track, result: any) {
 					${result}
 				</div>
 			</div>
-	</body>
+		</body>
 	</html>`;
 }
 
 mpv.on('started', async () => {
 	console.log('await getPlaylistPosition() ==>', await mpv.getPlaylistPosition());
-	console.log('await getTitle() ==>', await mpv.getTitle());
 	let timePos = await getTimePositionFormatted();
-	runningState(timePos);
+	await runningState(timePos);
 });
 
 mpv.on('stopped', () => {
@@ -278,12 +279,12 @@ mpv.on('paused', async () => {
 
 mpv.on('resumed', async () => {
 	const timePos = await getTimePositionFormatted();
-	runningState(timePos);
+	await runningState(timePos);
 });
 
 mpv.on('timeposition', async (timePosInSecond: number) => {
 	let timePos = new Date(timePosInSecond * 1000).toISOString().substr(11, 8);
-	runningState(timePos);
+	await runningState(timePos);
 	// do we need 'resumed' event ?
 });
 
